@@ -1,20 +1,26 @@
-import { useNavigate } from 'react-router-dom';
+import UserButton from "../components/dashboard/UserButton";
+import DashboardContent from "../components/dashboard/DashboardContent";
+import Sidebar from "../components/dashboard/Sidebar";
 
 function Dashboard() {
-  const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
   return (
-    <div>
-        
-      <h2>Welcome, {user?.email}</h2>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <>
+      <div className="flex flex-row min-h-screen">
+        {/* Sidebar component */}
+        <Sidebar />
+
+        <div className="flex flex-col w-full">
+          <div>
+            {/* Profile button component */}
+            <UserButton />
+          </div>
+          <div>
+            {/* Dashboard content component */}
+            <DashboardContent />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

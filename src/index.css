@@ -25,7 +25,7 @@ a {
 } */
 
 body {
-  display: flex;
+  /* display: flex; */
   
   /* min-height: 100vh; */
   background-color: #f7f9fa;
@@ -34,39 +34,60 @@ body {
   align-items: center;
 }
 
-/* h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+
+.my-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45 0 0 / .3);
+  backdrop-filter: blur(10px);
+
+  &[data-entering] {
+    animation: mymodal-blur 300ms;
+  }
+
+  &[data-exiting] {
+    animation: mymodal-blur 300ms reverse ease-in;
+  }
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.my-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  background: var(--overlay-background);
+  outline: none;
+  border-left: 1px solid var(--border-color);
+  box-shadow: -8px 0 20px rgba(0 0 0 / 0.1);
+
+  &[data-entering] {
+    animation: mymodal-slide 300ms;
+  }
+
+  &[data-exiting] {
+    animation: mymodal-slide 300ms reverse ease-in;
+  }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@keyframes mymodal-blur {
+  from {
+    background: rgba(45 0 0 / 0);
+    backdrop-filter: blur(0);
   }
-  a:hover {
-    color: #747bff;
+
+  to {
+    background: rgba(45 0 0 / .3);
+    backdrop-filter: blur(10px);
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@keyframes mymodal-slide {
+  from {
+    transform: translateX(100%);
   }
-} */
+
+  to {
+    transform: translateX(0);
+  }
+}

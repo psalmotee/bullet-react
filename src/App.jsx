@@ -7,6 +7,11 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Test from "./pages/Test";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
 
 function App() {
   return (
