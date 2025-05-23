@@ -1,94 +1,88 @@
 import reactLogo from "@/assets/react.svg";
 import { useState } from "react";
-// import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
-import { Navigate } from "react-router-dom";
-import { doSignInWithEmailAndPassword } from "../firebase/auth";
-import { useAuth } from "../contexts/authContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const { userLoggedIn } = useAuth();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  const onSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setIsSigningIn(true);
-    setErrorMessage("");
     try {
-      await doSignInWithEmailAndPassword(email, password);
-      // navigate("/dashboard");
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log(user);
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        toast.success("Login successful!!", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+        navigate("/dashboard");
+      }
     } catch (error) {
-      setErrorMessage(error.message);
-    } finally {
-      setIsSigningIn(false);
+      console.log(error.message);
+      toast.error("Error logging in!!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
     }
-  }
+  };
 
-  // const handleGoogleSignIn = async () => {
-  //   setIsSigningIn(true);
-  //   setErrorMessage("");
-  //   try {
-  //     await doSignInWithGoogle();
-  //     // navigate("/dashboard");
-  //   } catch (error) {
-  //     setErrorMessage(error.message);
-  //   } finally {
-  //     setIsSigningIn(false);
-  //   }
-  // }
-
-  // const navigate = useNavigate();
-
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     await signInWithEmailAndPassword(auth, email, password);
-  //     navigate("/dashboard");
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // };
   return (
     <>
-      {userLoggedIn && (<Navigate to="/dashboard" replace={true} />)}
-      <div className="flex flex-col items-center justify-center h-screen">
-        <img src={reactLogo} className="h-20 mb-6" alt="React logo" />
-        <h2 className="text-3xl font-extrabold text-black mb-6">
-          Log in to your account
-        </h2>
-        <div>
-          <form
-            onSubmit={onSubmit}
-            className="flex flex-col items-center mt-4 "
-          >
-            <input
-              type="email"
-              placeholder="Email"
-              className="border border-gray-300 text-black rounded-md p-2 mb-4 w-64"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="border border-gray-300 text-black rounded-md p-2 mb-4 w-64"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className=" w-full max-w-md ">
+          <div className="flex items-center justify-center">
+            <a href="/" className="flex items-center">
+              <img src={reactLogo} className="h-18 w-auto" alt="React logo" />
+            </a>
+          </div>
+          <h2 className="text-3xl font-extrabold text-black mt-6 text-center">
+            Log in to your account
+          </h2>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg mt-8 py-9 px-10 w-112">
+          <form onSubmit={handleLogin} className="flex flex-col items-center">
+            <div className="mb-6 grid grid-cols-1 gap-1 w-full">
+              <label htmlFor="email" className="font-medium text-sm">
+                Email
+              </label>
+              <input
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md px-3 py-1 flex h-9 w-full"
+              />
+            </div>
+            <div className="mb-6 w-full grid grid-cols-1 gap-1">
+              <label htmlFor="password" className="font-medium text-sm">
+                Password
+              </label>
+              <input
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+                className="border border-gray-300 text-black focus:outline-none focus:ring-1 focus:ring-black rounded-md w-full h-9 px-3 py-1"
+              />
+            </div>
             <button
               type="submit"
-              className="bg-blue-500 text-white rounded-md p-2 w-64 hover:bg-blue-600 transition duration-300 ease-in-out"
+              className="bg-gray-900 text-white rounded-md w-full px-4 py-1 cursor-pointer mt-2 hover:bg-gray-800 transition duration-300 ease-in-out"
             >
               Login
             </button>
           </form>
-          <p className="mt-4">
-            Don't have an account?{" "}
-            <a href="/register" className="text-blue-500 hover:underline">
+          <p className="mt-4 text-sm text-end">
+            {/* Don't have an account?{" "} */}
+            <a href="/register" className="text-blue-700 hover:text-blue-900">
               Register
             </a>
           </p>

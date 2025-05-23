@@ -13,5 +13,9 @@ export default defineConfig({
       '@': '/src',
     },
   },
+
+  optimizeDeps: {
+    include: ['@headlessui/react'],
+  },
 });
 
