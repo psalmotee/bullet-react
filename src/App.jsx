@@ -6,7 +6,7 @@ import Landing from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import Test from "./pages/Test";
+// import Test from "./pages/Test";
 import ProfilePage from "./components/dashboard/ProfilePage";
 import Discussion from "./components/dashboard/Discussion";
 import Users from "./components/dashboard/Users";
@@ -25,7 +25,7 @@ function App() {
           <Route path="discussion" element={<Discussion />} />
           <Route path="users" element={<Users />} />
         </Route>
-        <Route path="test" element={<Test />} />
+        {/* <Route path="test" element={<Test />} /> */}
       </Routes>
       <ToastContainer />
     </Router>
