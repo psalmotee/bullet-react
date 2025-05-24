@@ -1,7 +1,6 @@
 "use client";
 
 import reactLogo from "../../assets/react.svg";
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FiHome, FiFolder } from "react-icons/fi";
 import { LuUsers } from "react-icons/lu";
@@ -17,7 +16,7 @@ function Sidebar() {
 
   return (
     <>
-      <div className="bg-black w-60 py-9 px-2 h-full flex flex-col">
+      <div className="bg-black w-72 min-h-screen py-9 px-2 flex flex-col">
         <div className="flex items-center justify-center pl-6">
           <a href="/" className="flex items-center">
             <img src={reactLogo} className="h-6 w-auto" alt="React logo" />
@@ -30,16 +29,16 @@ function Sidebar() {
             const isActive = location.pathname === link.path;
             return (
               <Link
-                key={link.name}
-                to={link.path}
-                className={`flex items-center px-4 py-2 rounded transition-colors ${
-                  isActive
-                    ? "bg-gray-800 text-white"
-                    : "text-gray-400 hover:bg-gray-700 hover:text-white"
-                }`}
+              key={link.name}
+              to={link.path}
+              className={`flex items-center px-4 py-2 rounded transition-colors ${
+                isActive
+                ? "bg-gray-800 text-white"
+                : "text-gray-400 hover:bg-gray-700 hover:text-white"
+              }`}
               >
-                <span className="mr-3">{link.icon}</span>
-                {link.name}
+              <span className="mr-3 text-2xl">{link.icon}</span>
+              {link.name}
               </Link>
             );
           })}
