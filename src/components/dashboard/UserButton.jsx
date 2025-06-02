@@ -37,7 +37,6 @@ function UserButton() {
                 <a
                   className="block data-focus:bg-blue-50 text-sm"
                   onClick={handleLogout}
-                  href="/support"
                 >
                   Sign Out
                 </a>

@@ -4,13 +4,14 @@ import { getFirestore } from "firebase/firestore";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBaHen6QSnOH9gqmtXuHl0zDdyaljKnyfw",
-  authDomain: "bulletproof-55e03.firebaseapp.com",
-  projectId: "bulletproof-55e03",
-  storageBucket: "bulletproof-55e03.firebasestorage.app",
-  messagingSenderId: "1052485953859",
-  appId: "1:1052485953859:web:0a113f7c3e63e37e0567f6",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

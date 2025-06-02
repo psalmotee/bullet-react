@@ -5,10 +5,10 @@ import { ToastContainer } from "react-toastify";
 import Landing from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-// import Test from "./pages/Test";
+import Dashboard from "./components/dashboard/Dashboard";
+import Test from "./pages/Test";
 import ProfilePage from "./components/dashboard/ProfilePage";
-import Discussion from "./components/dashboard/Discussion";
+import Discussions from "./components/dashboard/Discussions";
 import Users from "./components/dashboard/Users";
 
 function App() {
@@ -22,10 +22,10 @@ function App() {
           <Route index element={<Dashboard />} />
           {/* Nested routes for dashboard */}
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="discussion" element={<Discussion />} />
+          <Route path="discussions" element={<Discussions />} />
           <Route path="users" element={<Users />} />
         </Route>
-        {/* <Route path="test" element={<Test />} /> */}
+        <Route path="test" element={<Test />} />
       </Routes>
       <ToastContainer />
     </Router>

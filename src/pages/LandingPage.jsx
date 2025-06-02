@@ -24,8 +24,8 @@ function Landing() {
               navigate("/login");
             }}
           >
-            <span className="flex items-center inline-block mr-4 text-2xl">
-              <BiHome />
+            <span className="flex items-center inline-block mr-4">
+              <BiHome size="24"/>
             </span>
             Get Started
           </button>
@@ -33,8 +33,8 @@ function Landing() {
             className="mt-8 h-9 px-4 py-2 bg-white text-black rounded-md text-sm font-semibold flex items-center justify-center border border-gray-300 hover:bg-gray-100 transition duration-300 ease-all cursor-pointer"
           >
             <a href="http://github.com/psalmotee" target="_blank" className='flex items-center'>
-              <span className="inline-block mr-4 text-2xl">
-                <FaGithub />
+              <span className="inline-block mr-4">
+                <FaGithub size="24"/>
               </span>
               Github Repo
             </a>

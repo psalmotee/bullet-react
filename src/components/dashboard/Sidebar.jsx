@@ -7,7 +7,7 @@ import { LuUsers } from "react-icons/lu";
 
 const navLinks = [
   { name: "Dashboard", icon: <FiHome />, path: "/dashboard" },
-  { name: "Discussion", icon: <FiFolder />, path: "/dashboard/discussion" },
+  { name: "Discussions", icon: <FiFolder />, path: "/dashboard/discussions" },
   { name: "Users", icon: <LuUsers />, path: "/dashboard/users" },
 ];
 

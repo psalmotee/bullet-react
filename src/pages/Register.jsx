@@ -1,18 +1,17 @@
 import reactLogo from "@/assets/react.svg";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth, db } from "../firebase/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Switch } from "@headlessui/react";
 import { collection, getDocs } from "firebase/firestore";
-import { useEffect } from "react";
 
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fanme, setFname] = useState("");
+  const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [teamName, setTeamName] = useState("");
   const [enabled, setEnabled] = useState(false);
@@ -48,13 +47,24 @@ function Register() {
       if (user) {
         await setDoc(doc(db, "Users", user.uid), {
           email: user.email,
-          firstName: fanme,
+          firstName: fname,
           lastName: lname,
           teamName: teamName,
+          role: enabled ? "Member" : "Admin",
+          teamId: enabled ? teamName : user.uid,
           createdAt: new Date(),
         });
       }
       console.log("User registered successfully:");
+      console.log("Registering with:", {
+        email,
+        firstName: fname,
+        lastName: lname,
+        teamName,
+        role: enabled ? "Member" : "Admin",
+        teamId: enabled ? teamName : user.uid,
+      });
+      
       toast.success("User registered successfully!!", {
         position: "top-right",
         autoClose: 2000,
@@ -167,6 +177,7 @@ function Register() {
                     className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md w-full h-9 px-3 py-1"
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
+                    required
                   >
                     <option value="">Select a team</option>
                     {existingTeams.map((team, index) => (
