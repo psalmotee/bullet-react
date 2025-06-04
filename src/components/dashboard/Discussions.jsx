@@ -37,7 +37,7 @@ function Discussions() {
                     onClick={showDrawer}
                     className="mt-3 h-8 px-3 gap-3 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
                   >
-                    <span className="text-blue-500 hover:underline ml-2">
+                    <span className="text-blue-500 ml-2">
                       <HiMiniPlus size="1.3rem" color="white" />
                     </span>
                     Create Discussion

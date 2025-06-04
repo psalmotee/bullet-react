@@ -18,10 +18,10 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+          <Route path="profile" element={<ProfilePage />} />
         <Route path="/dashboard">
           <Route index element={<Dashboard />} />
           {/* Nested routes for dashboard */}
-          <Route path="profile" element={<ProfilePage />} />
           <Route path="discussions" element={<Discussions />} />
           <Route path="users" element={<Users />} />
         </Route>

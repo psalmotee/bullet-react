@@ -3,6 +3,8 @@ import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Sidebar from "./Sidebar";
 import UserButton from "./UserButton";
+import { toast } from "react-toastify";
+
 
 function Users() {
   const [userDetails, setUserDetails] = useState(null);
@@ -17,14 +19,19 @@ function Users() {
           if (docSnap.exists()) {
             setUserDetails(docSnap.data());
             console.log("User details fetched:", docSnap.data());
+            toast.success("User details fetched successfully.");
           } else {
-            console.log("No such document!");
+            console.log("User details not found in database.");
+            toast.error("User details not found in database.");
           }
         } catch (error) {
           console.error("Error fetching user details:", error);
+          toast.error("Error fetching user details.");
         }
       } else {
         console.log("No user is signed in");
+        toast.info("No user signed in.");
+        setUserDetails(null);
       }
     });
 
@@ -73,7 +80,7 @@ function Users() {
                       <td className="h-10 px-2 text-left">
                         {userDetails.email}
                       </td>
-                      <td className="h-10 px-2 text-left">
+                      <td className="h-10 px-2 text-left uppercase">
                         {userDetails.role === "Admin"
                           ? `Admin: ${userDetails.teamName}`
                           : userDetails.role === "Member"
@@ -99,9 +106,9 @@ function Users() {
           </div>
         </div>
       ) : (
-        <div className="text-center mt-10 text-gray-500">
-          No user details available
-        </div>
+          <div className="text-center mt-10 text-gray-500">
+            <p>No user details available. Login <a href="/login" className="text-blue-500">here</a>.</p>
+          </div>
       )}
     </>
   );
