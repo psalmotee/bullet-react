@@ -1,11 +1,12 @@
 import Sidebar from "./Sidebar";
 import UserButton from "./UserButton";
 import { LuPen } from "react-icons/lu";
-import { Drawer } from "antd";
+import { Drawer, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { CloseOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 function ProfilePage() {
@@ -17,9 +18,47 @@ function ProfilePage() {
     setOpen(false);
   };
 
-  // State to hold user details and loading state
+  // State to hold user details, loading state and update form fields
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+  const [updating, setUpdating] = useState(false);
+
+
+  const handleUpdateProfile = async () => {
+    const user = auth.currentUser;
+    if (!user) return toast.error("User not authenticated.");
+
+    setUpdating(true); // Start loading
+    try {
+      const userRef = doc(db, "Users", user.uid);
+      await updateDoc(userRef, {
+        firstName,
+        lastName,
+        email,
+        bio,
+      });
+
+      toast.success("Profile updated successfully!");
+      setUserDetails((prev) => ({
+        ...prev,
+        firstName,
+        lastName,
+        email,
+        bio,
+      }));
+      setOpen(false); // Close drawer
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile.");
+    } finally {
+    setUpdating(false); // End loading
+  }
+  };
+  
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -31,6 +70,13 @@ function ProfilePage() {
             setUserDetails(docSnap.data());
             console.log("User details fetched:", docSnap.data());
             toast.success("User details fetched successfully.");
+            const data = docSnap.data();
+            setUserDetails(data);
+            setFirstName(data.firstName || "");
+            setLastName(data.lastName || "");
+            setEmail(data.email || "");
+            setBio(data.bio || "");
+
           } else {
             console.log("User details not found in database.");
             toast.error("User details not found in database.");
@@ -53,7 +99,9 @@ function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-black" />
+        <Spin size="meduim">
+          
+        </Spin>
       </div>
     );
   }
@@ -115,10 +163,19 @@ function ProfilePage() {
                       >
                         Close
                       </button>
+
                       <button
                         type="submit"
-                        className="h-9 px-5 py-2 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
+                        onClick={handleUpdateProfile}
+                        disabled={updating}
+                        className="h-9 px-5 py-2 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
                       >
+                        {updating && (
+                          <Spin
+                            indicator={<LoadingOutlined spin />}
+                            size="small"
+                          />
+                        )}
                         Submit
                       </button>
                     </div>
@@ -147,6 +204,8 @@ function ProfilePage() {
                       <input
                         type="text"
                         id="first-name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                         className="mt-1 block w-full h-9 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 "
                       />
                     </div>
@@ -160,32 +219,32 @@ function ProfilePage() {
                       <input
                         type="text"
                         id="last-name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         className="mt-1 block w-full h-9 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 "
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor="email"
-                        className="text-md font-semibold"
-                      >
+                      <label htmlFor="email" className="text-md font-semibold">
                         Email Address
                       </label>
                       <input
                         type="text"
                         id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="mt-1 block w-full h-9 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 "
                       />
                     </div>
 
                     <div>
-                      <label
-                        htmlFor="bio"
-                        className="text-md font-semibold"
-                      >
+                      <label htmlFor="bio" className="text-md font-semibold">
                         Bio
                       </label>
                       <textarea
                         id="bio"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
                         className="mt-1 block w-full h-16 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1"
                       ></textarea>
                     </div>
