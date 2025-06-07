@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import Sidebar from "./Sidebar";
-import UserButton from "./UserButton";
 import { toast } from "react-toastify";
 
 
@@ -41,74 +39,61 @@ function Users() {
   return (
     <>
       {userDetails ? (
-        <div className="flex flex-row min-h-screen">
-          <Sidebar />
+        <div className="flex flex-col w-full">
+          <div className="w-full max-w-md">
+            <h2 className="text-2xl font-medium text-black">Users</h2>
+          </div>
+          <div className="mt-6 w-full overflow-auto">
+            <table className="w-full text-sm divide-y divide-gray-200">
+              <thead>
+                <tr className=" text-sm text-gray-400">
+                  <th className="h-10 font-medium text-left">First Name</th>
+                  <th className="h-10 font-medium px-2 text-left">Last Name</th>
+                  <th className="h-10 font-medium px-2 text-left">Email</th>
+                  <th className="h-10 font-medium px-2 text-left">Role</th>
+                  <th className="h-10 font-medium px-2 text-left">
+                    Created At
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="h-10 text-left">{userDetails.firstName}</td>
+                  <td className="h-10 px-2 text-left">
+                    {userDetails.lastName}
+                  </td>
+                  <td className="h-10 px-2 text-left">{userDetails.email}</td>
+                  <td className="h-10 px-2 text-left uppercase">
+                    {userDetails.role === "Admin"
+                      ? `Admin: ${userDetails.teamName}`
+                      : userDetails.role === "Member"
+                      ? `Member: ${userDetails.teamName}`
+                      : "No role"}
+                  </td>
 
-          <div className="flex flex-col w-full">
-            <div>
-              <UserButton />
-            </div>
-            <div className="px-16 mt-25">
-              <div className="w-full max-w-md">
-                <h2 className="text-2xl font-medium text-black">Users</h2>
-              </div>
-              <div className="mt-6 w-full overflow-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200 text-sm text-gray-400">
-                      <th className="px-2 h-10 font-medium text-left">
-                        First Name
-                      </th>
-                      <th className="h-10 font-medium px-2 text-left">
-                        Last Name
-                      </th>
-                      <th className="h-10 font-medium px-2 text-left">Email</th>
-                      <th className="h-10 font-medium px-2 text-left">Role</th>
-                      <th className="h-10 font-medium px-2 text-left">
-                        Created At
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="px-2 h-10 text-left">
-                        {userDetails.firstName}
-                      </td>
-                      <td className="h-10 px-2 text-left">
-                        {userDetails.lastName}
-                      </td>
-                      <td className="h-10 px-2 text-left">
-                        {userDetails.email}
-                      </td>
-                      <td className="h-10 px-2 text-left uppercase">
-                        {userDetails.role === "Admin"
-                          ? `Admin: ${userDetails.teamName}`
-                          : userDetails.role === "Member"
-                          ? `Member: ${userDetails.teamName}`
-                          : "No role"}
-                      </td>
-
-                      <td className="h-10 px-2 text-left">
-                        {userDetails.createdAt
-                          ? userDetails.createdAt
-                              .toDate()
-                              .toLocaleString("en-US", {
-                                dateStyle: "medium",
-                                timeStyle: "short",
-                              })
-                          : "N/A"}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                  <td className="h-10 px-2 text-left">
+                    {userDetails.createdAt
+                      ? userDetails.createdAt.toDate().toLocaleString("en-US", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })
+                      : "N/A"}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       ) : (
-          <div className="text-center mt-10 text-gray-500">
-            <p>No user details available. Login <a href="/login" className="text-blue-500">here</a>.</p>
-          </div>
+        <div className="text-center mt-10 text-gray-500">
+          <p>
+            No user details available. Login{" "}
+            <a href="/login" className="text-blue-500">
+              here
+            </a>
+            .
+          </p>
+        </div>
       )}
     </>
   );

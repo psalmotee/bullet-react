@@ -1,5 +1,3 @@
-import Sidebar from "./Sidebar";
-import UserButton from "./UserButton";
 import { LuPen } from "react-icons/lu";
 import { Drawer, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -99,9 +97,7 @@ function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spin size="meduim">
-          
-        </Spin>
+        <Spin indicator={<LoadingOutlined spin />} size="large"/>
       </div>
     );
   }
@@ -123,24 +119,17 @@ function ProfilePage() {
 
   return (
     <>
-      <div className="flex flex-row min-h-screen">
-        <Sidebar />
-        <div className="flex flex-col w-full">
-          <div>
-            <UserButton />
-          </div>
-          <div className="px-16 mt-25">
+        <div className="flex flex-col w-full"> 
             <h2 className="text-2xl font-medium text-black">Profile</h2>
-
             <div className="mt-6 bg-white rounded-lg shadow-md">
-              <div className="flex justify-between items-center px-6 pt-6 pb-2">
+              <div className="flex justify-between items-center px-6 pt-4 pb-2">
                 <h3 className="text-lg font-medium">User Information</h3>
                 <button
                   onClick={showDrawer}
                   className="h-8 px-3 gap-3 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
                 >
-                  <span className="text-blue-500 ml-2">
-                    <LuPen size="1rem" color="white" />
+                  <span className="mr-2">
+                    <LuPen size="1rem" />
                   </span>
                   Update Profile
                 </button>
@@ -285,8 +274,6 @@ function ProfilePage() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </>
   );
 }
