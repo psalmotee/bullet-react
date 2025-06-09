@@ -1,7 +1,8 @@
 // import { useState } from 'react'
 import {
   createBrowserRouter,
-  RouterProvider, BrowserRouter as Router,
+  RouterProvider,
+  BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
@@ -13,12 +14,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./components/dashboard/Dashboard";
 // import Test from "./pages/Test";
-import Discussions from "./components/dashboard/Discussions";
-import ViewDiscussion from "./components/dashboard/ViewDiscussion";
+import Discussions from "./components/discussions/Discussions";
+import ViewDiscussion from "./components/viewDiscussion/ViewDiscussion";
 import Users from "./components/dashboard/Users";
-import ProfilePage from "./components/dashboard/ProfilePage";
+import ProfilePage from "./components/profile/ProfilePage";
 import DashboardLayout from "./pages/DashboardLayout";
-
 
 const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
@@ -42,7 +42,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
 
 function App() {
   return (
