@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react"
 import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
-// import UserButton from "./UserButton";
-// import Sidebar from "./Sidebar";
 import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 
 function Dashboard() {
@@ -43,7 +41,7 @@ function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spin size="meduim"></Spin>
+        <Spin indicator={<LoadingOutlined spin />} size="large" />
       </div>
     );
   }

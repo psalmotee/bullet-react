@@ -6,7 +6,8 @@ import {
   Route,
 } from "react-router-dom";
 // import "./App.css";
-// import { ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Landing from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
+  // { path: "/test", element: <Test /> },
   {
     path: "/dashboard",
     element: <DashboardLayout />,
@@ -44,8 +46,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
-      // <ToastContainer />
+    <>
+      <ToastContainer />
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </>
   );
 }
 

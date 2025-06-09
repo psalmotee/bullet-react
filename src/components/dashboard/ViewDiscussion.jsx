@@ -1,8 +1,8 @@
 import { LuPen } from "react-icons/lu";
 import { AiOutlineDelete } from "react-icons/ai";
 import { HiMiniPlus } from "react-icons/hi2";
-import { LuArchiveX } from "react-icons/lu";
-import { Drawer, Spin } from "antd";
+import { LuArchiveX, LuCircleAlert } from "react-icons/lu";
+import { Drawer, Spin, Modal } from "antd";
 import { LoadingOutlined, CloseOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -34,6 +34,26 @@ function ViewDiscussionPage() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [commentBody, setCommentBody] = useState("");
+  const [commentLoading, setCommentLoading] = useState(false);
+
+   // Modal for delete confirmation
+    const [commentToDelete, setCommentToDelete] = useState(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+  
+    const [openModal, setOpenModal] = useState(false);
+    const showModal = () => {
+      setOpenModal(true);
+    };
+    const handleOk = () => {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        setOpenModal(false);
+      }, 3000);
+    };
+    const handleCancel = () => {
+      setOpenModal(false);
+    };
 
   const fetchDiscussion = async () => {
     try {
@@ -44,9 +64,12 @@ function ViewDiscussionPage() {
         setDiscussion({ id: docSnap.id, ...data });
         setTitle(data.title);
         setBody(data.body);
+      } else {
+        toast.error("Discussion not found.");
       }
     } catch (error) {
       toast.error("Failed to fetch discussion.");
+      console.error("Discussion/user fetch error:", error);
     }
   };
 
@@ -98,33 +121,53 @@ function ViewDiscussionPage() {
   const handleCreateComment = async () => {
     const user = auth.currentUser;
     if (!user) return toast.error("Not signed in.");
+    setCommentLoading(true);
 
     try {
+      const userRef = doc(db, "Users", user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.exists()
+        ? userSnap.data()
+        : { firstName: "Anonymous", lastName: "" };
+      const fullName = `${userData.firstName} ${userData.lastName}`;
+
       await addDoc(collection(db, "comments"), {
         discussionId: id,
         body: commentBody,
         createdAt: Timestamp.now(),
-        commenter: user.displayName || "Anonymous",
+        authorName: fullName,
       });
+
       toast.success("Comment created.");
       setCommentBody("");
       fetchComments();
       setIsCommentDrawer(false);
     } catch (error) {
       toast.error("Failed to create comment.");
+    } finally {
+      setCommentLoading(false);
     }
   };
+  
 
-  const handleDeleteComment = async (commentId) => {
-    try {
-      await deleteDoc(doc(db, "comments", commentId));
-      fetchComments();
-      toast.success("Comment deleted.");
-    } catch (error) {
-      toast.error("Failed to delete comment.");
-    }
+  const handleDeleteComment = async () => {
+     if (!commentToDelete) return;
+ 
+     setDeleteLoading(true);
+     try {
+       await deleteDoc(doc(db, "comments", commentToDelete));
+       toast.success("Comment Deleted");
+       fetchComments();
+     } catch (error) {
+       console.error("Delete error:", error);
+       toast.error("Failed to delete comment");
+     } finally {
+       setDeleteLoading(false);
+       setOpenModal(false);
+       setCommentToDelete(null);
+     }
   };
-
+  
   if (loading || !discussion) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -137,23 +180,23 @@ function ViewDiscussionPage() {
     dateStyle: "medium",
     timeStyle: "short",
   });
-  // const formattedTime = discussion.createdAt?.toDate().toLocaleTimeString();
 
   return (
     <div className="fle flex-col w-full">
       <h1 className="text-2xl font-semibold">{discussion.title}</h1>
       <div className="mt-8 w-full">
         <p className="text-xs font-bold">
-          {formattedDate} by
+          {formattedDate}
           <span className="text-ms font-bold text-gray-800">
-            {discussion.firstName} {discussion.lastName}
+            {" "}
+            by {discussion.authorName || "Unknown"}
           </span>
         </p>
 
         <div className="flex justify-end mt-6">
           <button
             onClick={() => setOpen(true)}
-            className="h-8 px-3 gap-3 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
+            className="h-8 px-3 gap-2 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
           >
             <span className="mr-2">
               <LuPen size="1rem" />
@@ -181,8 +224,12 @@ function ViewDiscussionPage() {
                 <button
                   type="submit"
                   onClick={handleUpdateDiscussion}
-                  className="h-9 px-5 py-2 bg-gray-900 text-white rounded-md text-sm font-semibold hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
+                  disabled={updating}
+                  className="h-9 px-5 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
                 >
+                  {updating && (
+                    <Spin indicator={<LoadingOutlined spin />} size="small" />
+                  )}
                   Submit
                 </button>
               </div>
@@ -239,7 +286,7 @@ function ViewDiscussionPage() {
         <h3 className="text-xl font-bold">Comments</h3>
         <button
           onClick={() => setIsCommentDrawer(true)}
-          className="h-8 px-3 gap-3 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
+          className="h-8 px-3 gap-2 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
         >
           <span className="mr-2">
             <HiMiniPlus size="1rem" />
@@ -260,15 +307,19 @@ function ViewDiscussionPage() {
             <div className="flex justify-end gap-3 mb-3 pr-2 pb-1">
               <button
                 onClick={() => setIsCommentDrawer(false)}
-                className="h-9 px-5 py-2 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out cursor-pointer"
+                className="h-9 px-5 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out cursor-pointer"
               >
                 Close
               </button>
               <button
                 type="submit"
                 onClick={handleCreateComment}
-                className="h-9 px-5 py-2 bg-gray-900 text-white rounded-md text-sm font-semibold hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
+                disabled={commentLoading}
+                className="h-9 px-5 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
               >
+                {commentLoading && (
+                  <Spin indicator={<LoadingOutlined spin />} size="small" />
+                )}
                 Submit
               </button>
             </div>
@@ -288,10 +339,7 @@ function ViewDiscussionPage() {
           </div>
           <div className="flex flex-col gap-6 pr-2">
             <div>
-              <label
-                htmlFor="comment-body"
-                className="text-sm font-medium"
-              >
+              <label htmlFor="comment-body" className="text-sm font-medium">
                 Body
               </label>
               <textarea
@@ -305,13 +353,13 @@ function ViewDiscussionPage() {
         </Drawer>
       </div>
 
-      <div className="mt-4 w-full overflow-x-auto">
+      <div className="mt-4 mb-8 w-full overflow-x-auto">
         {loading ? (
           <div className="shadow-md rounded-lg flex justify-center items-center w-full h-85">
             <Spin indicator={<LoadingOutlined spin />} size="large" />
           </div>
         ) : comments.length === 0 ? (
-          <div className="bg-white flex flex-col items-center justify-center p-10">
+          <div className="bg-white flex flex-col items-center justify-center p-6 rounded-lg shadow-md">
             <LuArchiveX size="2.5rem" color="gray" />
             <h4 className="text-gray-500 text-lg">No Comments Found</h4>
           </div>
@@ -319,14 +367,25 @@ function ViewDiscussionPage() {
           <ul className="space-y-4">
             {comments.map((c) => (
               <li key={c.id} className="bg-white rounded-md p-3">
-                <div className="text-sm text-gray-500 mt-1 flex justify-between">
+                <div className="text-sm mt-1 flex justify-between">
                   <div>
-                    <span className="text-xs">{formattedDate}</span>
-                    <span> By {c.commenter}</span>
+                    <span className="text-xs font-semibold">
+                      {c.createdAt?.toDate().toLocaleString("en-US", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      }) || "Unknown time"}
+                    </span>
+                    <span className="text-xs font-bold">
+                      {" "}
+                      by {c.authorName || "Unknown"}
+                    </span>
                   </div>
                   <button
-                    onClick={() => handleDeleteComment(c.id)}
-                    className="h-9 px-4 py-2 bg-red-500 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-4 hover:bg-red-400 transition duration-300 ease-in-out cursor-pointer"
+                    onClick={() => {
+                      setOpenModal(true);
+                      setCommentToDelete(c.id);
+                    }}
+                    className="h-8 px-3 bg-red-400 text-white rounded-md text-xs font-medium flex items-center justify-center gap-2 hover:bg-red-300 transition duration-300 ease-in-out cursor-pointer"
                   >
                     <span className="mr-2">
                       <AiOutlineDelete size="1rem" />
@@ -334,12 +393,59 @@ function ViewDiscussionPage() {
                     Delete Comment
                   </button>
                 </div>
-                <p>{commentBody}</p>
+                <p className="text-gray-800 font-bold text-2">{c.body}</p>
               </li>
             ))}
           </ul>
         )}
       </div>
+
+      {/* Delete Confirmation */}
+                <Modal
+                  open={openModal}
+                  closable={false}
+                  onOk={handleDeleteComment}
+                  onCancel={() => setOpenModal(false)}
+                  footer={[
+                    <div className="flex justify-end gap-2 mb-1 pr-2" key="footer">
+                      <button
+                        onClick={handleDeleteComment}
+                        disabled={deleteLoading}
+                        className="h-9 px-5 bg-red-400 text-white rounded-md text-sm font-semibold flex items-center gap-2 hover:bg-red-300 transition"
+                      >
+                        {deleteLoading && (
+                          <Spin indicator={<LoadingOutlined spin />} size="small" />
+                        )}
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => setOpenModal(false)}
+                        className="h-9 px-5 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition"
+                      >
+                        Cancel
+                      </button>
+                    </div>,
+                  ]}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="inline-flex items-center justify-center mt-3">
+                      <span className="inline-block mr-2 text-red-600">
+                        <LuCircleAlert size="1.5rem" />
+                      </span>
+                      <h2 className="text-lg font-semibold">Delete Discussion</h2>
+                    </div>
+                    <button
+                      onClick={() => setOpenModal(false)}
+                      aria-label="Close"
+                      className="text-gray-500 hover:text-black transition cursor-pointer"
+                    >
+                      <CloseOutlined style={{ fontSize: "12px" }} />
+                    </button>
+                  </div>
+                  <p className="px-6 pt-6 pb-2 text-[16px]">
+                    Are you sure you want to delete this discussion?
+                  </p>
+                </Modal>
     </div>
   );
 }

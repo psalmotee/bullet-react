@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Spin } from "antd";
+import { Drawer, Spin, Modal } from "antd";
 import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { HiMiniPlus } from "react-icons/hi2";
-import { LuArchiveX } from "react-icons/lu";
-import { db } from "../../firebase/firebase";
+import { LuArchiveX, LuCircleAlert } from "react-icons/lu";
+import { db, auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import {
   collection,
   addDoc,
+  getDoc,
   getDocs,
   deleteDoc,
   doc,
@@ -23,9 +24,26 @@ function Discussions() {
   const [content, setContent] = useState("");
   const [discussions, setDiscussions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-  
+  // Modal for delete confirmation
+  const [discussionToDelete, setDiscussionToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const [openModal, setOpenModal] = useState(false);
+  const showModal = () => {
+    setOpenModal(true);
+  };
+  const handleOk = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setOpenModal(false);
+    }, 3000);
+  };
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,14 +54,31 @@ function Discussions() {
 
   const handleCreateDiscussion = async () => {
     if (!title.trim()) return;
+    setLoading(true);
 
-    const newDiscussion = {
-      title,
-      content,
-      createdAt: new Date(),
-    };
+    const user = auth.currentUser;
+    if (!user) return toast.error("User not signed in.");
 
     try {
+      const userDocRef = doc(db, "Users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (!userSnap.exists()) {
+        toast.error("User details not found.");
+        return;
+      }
+
+      const userData = userSnap.data();
+      const fullName = `${userData.firstName} ${userData.lastName}`;
+
+      const newDiscussion = {
+        title,
+        content,
+        createdBy: user.uid,
+        authorName: fullName,
+        createdAt: new Date(),
+      };
+
       await addDoc(collection(db, "discussions"), newDiscussion);
       fetchDiscussions();
       setTitle("");
@@ -53,6 +88,8 @@ function Discussions() {
     } catch (error) {
       console.error("Error creating discussion:", error);
       toast.error("Failed to create discussion");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,16 +114,24 @@ function Discussions() {
     }
   };
 
-  const handleDeleteDiscussion = async (id) => {
+  const handleDeleteDiscussion = async () => {
+    if (!discussionToDelete) return;
+
+    setDeleteLoading(true);
     try {
-      await deleteDoc(doc(db, "discussions", id));
-      fetchDiscussions();
+      await deleteDoc(doc(db, "discussions", discussionToDelete));
       toast.success("Discussion Deleted");
+      fetchDiscussions();
     } catch (error) {
-      console.error("Error deleting discussion:", error);
+      console.error("Delete error:", error);
       toast.error("Failed to delete discussion");
+    } finally {
+      setDeleteLoading(false);
+      setOpenModal(false);
+      setDiscussionToDelete(null);
     }
   };
+  
 
   useEffect(() => {
     fetchDiscussions();
@@ -106,7 +151,7 @@ function Discussions() {
         <div className="flex justify-end">
           <button
             onClick={showDrawer}
-            className="h-8 px-3 gap-3 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
+            className="h-8 px-3 gap-2 bg-gray-900 font-medium text-xs text-white rounded-md inline-flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
           >
             <span className="text-blue-500 mr-2">
               <HiMiniPlus size="1.13rem" color="white" />
@@ -127,15 +172,19 @@ function Discussions() {
               <div className="flex justify-end gap-3 mb-3 pr-2 pb-1">
                 <button
                   onClick={onClose}
-                  className="h-9 px-5 py-2 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out cursor-pointer"
+                  className="h-9 px-5 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out cursor-pointer"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
+                  disabled={loading}
                   onClick={handleCreateDiscussion}
-                  className="h-9 px-5 py-2 bg-gray-900 text-white rounded-md text-sm font-semibold hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
+                  className="h-9 px-5 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer"
                 >
+                  {loading && (
+                    <Spin indicator={<LoadingOutlined spin />} size="small" />
+                  )}
                   Submit
                 </button>
               </div>
@@ -204,6 +253,9 @@ function Discussions() {
               <thead>
                 <tr>
                   <th className="text-left text-sm font-medium text-gray-500">
+                    Author
+                  </th>
+                  <th className="text-left text-sm font-medium text-gray-500">
                     Title
                   </th>
                   <th className="px-2 py-2 text-left text-sm font-medium text-gray-500">
@@ -214,6 +266,9 @@ function Discussions() {
               <tbody className="divide-y divide-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
                 {currentItems.map((d) => (
                   <tr key={d.id}>
+                    <td className="text-sm text-gray-700">
+                      {d.authorName || "Unknown"}
+                    </td>
                     <td className="whitespace-nowrap">{d.title}</td>
                     <td className="px-2 whitespace-nowrap">
                       {d.createdAt
@@ -224,17 +279,22 @@ function Discussions() {
                         : "N/A"}
                     </td>
                     <td className="flex px-2 py-2 whitespace-nowrap space-x-10">
-                      <button className="h-9 px-4 py-2 text-gray-600 hover:text-gray-900 transition duration-300 ease-in-out">
+                      <button className="h-9 px-3 text-gray-600 hover:text-gray-900 transition duration-300 ease-in-out">
                         <a
-                          onClick={() => navigate(`/dashboard/discussions/${d.id}`)}
+                          onClick={() =>
+                            navigate(`/dashboard/discussions/${d.id}`)
+                          }
                           className="flex text-sm items-center gap-2"
                         >
                           View
                         </a>
                       </button>
                       <button
-                        onClick={() => handleDeleteDiscussion(d.id)}
-                        className="h-9 px-4 py-2 bg-red-500 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-4 hover:bg-red-400 transition duration-300 ease-in-out cursor-pointer"
+                        onClick={() => {
+                          setOpenModal(true);
+                          setDiscussionToDelete(d.id);
+                        }}
+                        className="h-8 px-3 bg-red-400 text-white rounded-md text-xs font-medium flex items-center justify-center gap-2 hover:bg-red-300 transition duration-300 ease-in-out cursor-pointer"
                       >
                         <span className="mr-2">
                           <AiOutlineDelete size="1rem" />
@@ -247,6 +307,53 @@ function Discussions() {
               </tbody>
             </table>
           )}
+
+          {/* Delete Confirmation */}
+          <Modal
+            open={openModal}
+            closable={false}
+            onOk={handleDeleteDiscussion}
+            onCancel={() => setOpenModal(false)}
+            footer={[
+              <div className="flex justify-end gap-2 mb-1 pr-2" key="footer">
+                <button
+                  onClick={handleDeleteDiscussion}
+                  disabled={deleteLoading}
+                  className="h-9 px-5 bg-red-400 text-white rounded-md text-sm font-semibold flex items-center gap-2 hover:bg-red-300 transition"
+                >
+                  {deleteLoading && (
+                    <Spin indicator={<LoadingOutlined spin />} size="small" />
+                  )}
+                  Delete
+                </button>
+                <button
+                  onClick={() => setOpenModal(false)}
+                  className="h-9 px-5 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+              </div>,
+            ]}
+          >
+            <div className="flex items-start justify-between">
+              <div className="inline-flex items-center justify-center mt-3">
+                <span className="inline-block mr-2 text-red-600">
+                  <LuCircleAlert size="1.5rem" />
+                </span>
+                <h2 className="text-lg font-semibold">Delete Discussion</h2>
+              </div>
+              <button
+                onClick={() => setOpenModal(false)}
+                aria-label="Close"
+                className="text-gray-500 hover:text-black transition cursor-pointer"
+              >
+                <CloseOutlined style={{ fontSize: "12px" }} />
+              </button>
+            </div>
+            <p className="px-6 pt-6 pb-2 text-[16px]">
+              Are you sure you want to delete this discussion?
+            </p>
+          </Modal>
         </div>
 
         {/* Pagination */}

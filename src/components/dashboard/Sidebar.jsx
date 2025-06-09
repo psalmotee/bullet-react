@@ -16,7 +16,7 @@ function Sidebar() {
 
   return (
     <>
-      <div className="bg-black min-w-60 min-h-screen py-9 flex flex-col">
+      <div className="bg-black min-w-60 min-h-screen  py-9 flex flex-col">
         <div className="flex items-center justify-center ml-4">
           <a href="/" className="flex items-center">
             <img src={reactLogo} className="h-6 w-auto" alt="React logo" />
