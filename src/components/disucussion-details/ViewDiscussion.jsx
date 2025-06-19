@@ -2,20 +2,9 @@ import { LuPen } from "react-icons/lu";
 import { IoIosClose } from "react-icons/io";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { auth, db } from "../../firebase/firebase";
-import Comments from "../comments/Comments"
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-  Timestamp,
-  addDoc,
-} from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import Comments from "../comments/Comments";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import React from "react";
 
@@ -94,7 +83,6 @@ function ViewDiscussionPage() {
   const handleCloseDrawer = () => {
     document.getElementById("update-discussion-drawer").checked = false;
   };
- 
 
   return (
     <div className="flex flex-col w-full py-6 sm:py-0 ">
@@ -123,7 +111,7 @@ function ViewDiscussionPage() {
                 <span>Update Discussion</span>
               </button>
             </div>
-            
+
             {/* Update Drawer Trigger */}
             <div className="drawer drawer-end">
               <input

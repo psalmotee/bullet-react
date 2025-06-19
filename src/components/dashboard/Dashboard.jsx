@@ -47,7 +47,6 @@ function Dashboard() {
   if (!userDetails) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
-        {/* Or you could redirect to login here */}
         <p>
           No user details available. Login{" "}
           <a href="/login" className="text-blue-500">
