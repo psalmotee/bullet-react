@@ -275,7 +275,7 @@ function Discussions() {
                 {currentItems.map((d) => (
                   <tr
                     key={d.id}
-                    className="text-sm text-gray-700 odd:bg-white even:bg-gray-200"
+                    className="text-sm text-gray-700 odd:bg-white even:bg-gray-200 hover:odd:bg-gray-100 hover:even:hover:bg-gray-300"
                   >
                     <td className="p-2 ">{d.authorName || "Unknown"}</td>
                     <td className="p-2 whitespace-nowrap">{d.title}</td>
