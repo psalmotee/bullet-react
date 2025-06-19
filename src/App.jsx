@@ -1,9 +1,7 @@
 // import { useState } from 'react'
 import {
   createBrowserRouter,
-  RouterProvider, BrowserRouter as Router,
-  Routes,
-  Route,
+  RouterProvider
 } from "react-router-dom";
 // import "./App.css";
 import { ToastContainer } from "react-toastify";
@@ -12,19 +10,19 @@ import Landing from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./components/dashboard/Dashboard";
-// import Test from "./pages/Test";
-import Discussions from "./components/dashboard/Discussions";
-import ViewDiscussion from "./components/dashboard/ViewDiscussion";
-import Users from "./components/dashboard/Users";
-import ProfilePage from "./components/dashboard/ProfilePage";
+import Discussions from "./components/discussions/Discussions";
+import ViewDiscussion from "./components/disucussion-details/ViewDiscussion";
+import Users from "./components/users/Users";
+import ProfilePage from "./components/profile/ProfilePage";
 import DashboardLayout from "./pages/DashboardLayout";
+import Test from "./pages/test";
 
 
 const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
-  // { path: "/test", element: <Test /> },
+  { path: "/test", element: <Test /> },
   {
     path: "/dashboard",
     element: <DashboardLayout />,

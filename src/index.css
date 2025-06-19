@@ -1,10 +1,13 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
 /* Custom CSS to ensure Tailwind takes precedence */
 @layer base {
   /* Reset any conflicting styles */
   * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
   html,

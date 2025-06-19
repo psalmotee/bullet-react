@@ -64,7 +64,7 @@ function Register() {
         role: enabled ? "Member" : "Admin",
         teamId: enabled ? teamName : user.uid,
       });
-      
+
       toast.success("User registered successfully!!", {
         position: "top-right",
         autoClose: 2000,
@@ -83,17 +83,25 @@ function Register() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen sm:px-6 lg:px-8 py-16">
+        {" "}
         <div className=" w-full max-w-md ">
+          {" "}
           <div className="flex items-center justify-center">
+            {" "}
             <a href="/" className="flex items-center">
-              <img src={reactLogo} className="h-18 w-auto" alt="React logo" />
-            </a>
-          </div>
+              {" "}
+              <img
+                src={reactLogo}
+                className="h-18 w-auto"
+                alt="React logo"
+              />{" "}
+            </a>{" "}
+          </div>{" "}
           <h2 className="text-3xl font-extrabold text-black mt-6 text-center">
-            Register your account
-          </h2>
+            {" "}
+            Register your account{" "}
+          </h2>{" "}
         </div>
-
         <div className="bg-white shadow-md rounded-lg mt-8 py-9 px-10 w-112">
           <form
             onSubmit={handleRegister}
@@ -101,49 +109,58 @@ function Register() {
           >
             <div className="mb-6 grid grid-cols-1 gap-1 w-full ">
               <label htmlFor="first-name" className="font-medium text-sm">
-                First Name
+                <span class="after:ml-0.5 after:text-red-500 after:content-['*']">
+                  First Name
+                </span>
               </label>
               <input
                 type="text"
                 required
                 onChange={(e) => setFname(e.target.value)}
-                className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md w-full h-9 px-3 py-1"
+                className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500"
               />
             </div>
 
             <div className="mb-6 grid grid-cols-1 gap-1 w-full">
               <label htmlFor="last-name" className="font-medium text-sm">
-                Last Name
+                <span class="text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">
+                  Last Name
+                </span>
               </label>
               <input
                 type="text"
                 required
                 onChange={(e) => setLname(e.target.value)}
-                className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md w-full h-9 px-3 py-1"
+                className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500"
               />
             </div>
 
             <div className="mb-6 grid grid-cols-1 gap-1 w-full">
               <label htmlFor="email" className="font-medium text-sm">
-                Email Address
+                <span class="after:ml-0.5 after:text-red-500 after:content-['*']">
+                  Email Address
+                </span>
               </label>
               <input
                 type="email"
                 required
+                placeholder="you@example.com"
                 onChange={(e) => setEmail(e.target.value)}
-                className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md w-full h-9 px-3 py-1"
+                className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500"
               />
             </div>
 
             <div className="mb-5 grid grid-cols-1 gap-1 w-full">
               <label htmlFor="password" className="font-medium text-sm">
-                Password
+                <span class="after:ml-0.5 after:text-red-500 after:content-['*']">
+                  Password
+                </span>
               </label>
               <input
                 type="password"
                 required
                 onChange={(e) => setPassword(e.target.value)}
-                className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md w-full h-9 px-3 py-1"
+                className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500"
               />
             </div>
 
@@ -171,7 +188,9 @@ function Register() {
               {enabled ? (
                 <div className="grid grid-cols-1 gap-1 w-full">
                   <label htmlFor="team-name" className="font-medium text-sm">
-                    Team
+                    <span class="after:ml-0.5 after:text-red-500 after:content-['*']">
+                      Team
+                    </span>
                   </label>
                   <select
                     className="border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black text-black rounded-md w-full h-9 px-3 py-1"
@@ -190,13 +209,15 @@ function Register() {
               ) : (
                 <div className="grid grid-cols-1 gap-1 w-full">
                   <label htmlFor="team-name" className="font-medium text-sm">
-                    Team Name
+                    <span class="after:ml-0.5 after:text-red-500 after:content-['*']">
+                      Team Name
+                    </span>
                   </label>
                   <input
                     type="text"
                     required
                     onChange={(e) => setTeamName(e.target.value)}
-                    className="border border-gray-300 text-black rounded-md w-full h-9 px-3 py-1"
+                    className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500"
                   />
                 </div>
               )}
@@ -210,13 +231,13 @@ function Register() {
             </button>
           </form>
           <p className="mt-2 text-sm text-end">
-            {/* Already have an account?{" "} */}
+            Already have an account?{" "}
             <a href="/login" className="text-blue-700 hover:text-blue-900">
               Log in
             </a>
           </p>
         </div>
-      </div>
+      </div>{" "}
     </>
   );
 }

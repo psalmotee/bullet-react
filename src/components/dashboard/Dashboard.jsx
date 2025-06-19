@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 
 function Dashboard() {
@@ -41,7 +39,7 @@ function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spin indicator={<LoadingOutlined spin />} size="large" />
+        <span className="loading loading-ring loading-xl"></span>
       </div>
     );
   }
@@ -63,40 +61,42 @@ function Dashboard() {
 
   return (
     <>
-        <div className="flex flex-col w-full">
-            <h2 className="text-2xl font-medium text-black">Dashboard</h2>
-          <div className="mt-6 ml-1 w-full max-w-3xl">
-            <h1 className="text-xl text-black">
-              Welcome{" "}
-              <span className="font-bold">
-                {userDetails.firstName + " " + userDetails.lastName}
-              </span>
-            </h1>
-            <h4 className="text-[16px] mt-3 text-black">
-              Your role:{" "}
-              <span className="font-bold uppercase">
-                {userDetails.role}
-                {userDetails.teamName && (
-                  <>
-                    {" "}
-                    of Team{" "}
-                    <span className="underline">{userDetails.teamName}</span>
-                  </>
-                )}
-              </span>
-            </h4>
-            <p className="font-semibold mt-3 text-black">
-              In this application you can:
-            </p>
-            <ul className="list-disc list-inside mt-4">
-              <li>Create discussions</li>
-              <li>Edit discussions</li>
-              <li>Delete discussions</li>
-              <li>Comment on discussions</li>
-              <li>Delete all comments</li>
-            </ul>
-          </div>
+      <div className="flex flex-col w-full py-6 sm:py-0">
+        <div className="px-4 sm:px-6 md:px-8">
+          <h2 className="text-2xl font-medium text-black">Dashboard</h2>
         </div>
+        <div className="px-4 sm:px-6 md:px-8 py-6 w-full max-w-3xl">
+          <h1 className="text-xl text-black">
+            Welcome{" "}
+            <span className="font-bold">
+              {userDetails.firstName + " " + userDetails.lastName}
+            </span>
+          </h1>
+          <h4 className="text-[16px] my-3 text-black">
+            Your role:{" "}
+            <span className="font-bold uppercase">
+              {userDetails.role}
+              {userDetails.teamName && (
+                <>
+                  {" "}
+                  of Team{" "}
+                  <span className="underline">{userDetails.teamName}</span>
+                </>
+              )}
+            </span>
+          </h4>
+          <p className="font-semibold text-black">
+            In this application you can:
+          </p>
+          <ul className="list-disc list-inside my-4">
+            <li>Create discussions</li>
+            <li>Edit discussions</li>
+            <li>Delete discussions</li>
+            <li>Comment on discussions</li>
+            <li>Delete all comments</li>
+          </ul>
+        </div>
+      </div>
     </>
   );
 }
