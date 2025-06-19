@@ -131,7 +131,6 @@ function ViewDiscussionPage() {
                 type="checkbox"
                 className="drawer-toggle"
               />
-              <div className="drawer-content">{/* Page content here */}</div>
               <div className="drawer-side">
                 <button
                   onClick={handleCloseDrawer}

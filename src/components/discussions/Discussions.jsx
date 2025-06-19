@@ -151,7 +151,7 @@ function Discussions() {
             <span>Create Discussion</span>
           </button>
         </div>
-        
+
         {/* Create Discussion Button + Right side Drawer */}
         <div className="drawer drawer-end">
           <input
@@ -159,7 +159,6 @@ function Discussions() {
             type="checkbox"
             className="drawer-toggle"
           />
-          <div className="drawer-content">{/* Page content here */}</div>
           <div className="drawer-side">
             <button
               onClick={handleCloseDrawer}
@@ -257,7 +256,7 @@ function Discussions() {
               <span className="loading loading-ring loading-xl"></span>
             </div>
           ) : discussions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-10">
+            <div className="flex flex-col items-center justify-center p-10 bg-white shadow-md rounded-lg">
               <LuArchiveX size="4rem" color="gray" />
               <h4 className="text-gray-500 text-lg">No Entries Found</h4>
             </div>
