@@ -15,14 +15,12 @@ import ViewDiscussion from "./components/disucussion-details/ViewDiscussion";
 import Users from "./components/users/Users";
 import ProfilePage from "./components/profile/ProfilePage";
 import DashboardLayout from "./pages/DashboardLayout";
-import Test from "./pages/test";
 
 
 const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
-  { path: "/test", element: <Test /> },
   {
     path: "/dashboard",
     element: <DashboardLayout />,
@@ -40,7 +38,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
 
 function App() {
   return (
