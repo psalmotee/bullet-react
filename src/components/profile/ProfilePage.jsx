@@ -246,7 +246,7 @@ function ProfilePage() {
                       <button
                         onClick={handleProfileCloseDrawer}
                         htmlFor="update-profile-drawer"
-                        className="btn h-9 px-5 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out"
+                        className="btn h-8 px-3 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out"
                       >
                         Close
                       </button>
@@ -255,7 +255,7 @@ function ProfilePage() {
                         type="submit"
                         disabled={updating}
                         onClick={handleUpdateProfile}
-                        className="btn h-9 px-5 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out"
+                        className="btn h-8 px-3 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out"
                       >
                         {updating && (
                           <span className="loading loading-spinner loading-xs text-white/50"></span>

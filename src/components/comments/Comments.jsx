@@ -196,7 +196,7 @@ function Comments() {
               <button
                 onClick={handleCloseCommentDrawer}
                 htmlFor="create-comment-drawer"
-                className="btn h-9 px-5 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out"
+                className="btn h-8 px-3 bg-white text-black rounded-md text-sm font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 ease-in-out"
               >
                 Close
               </button>
@@ -205,7 +205,7 @@ function Comments() {
                 type="submit"
                 disabled={commentLoading}
                 onClick={handleCreateComment}
-                className="btn h-9 px-5 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out"
+                className="btn h-8 px-3 bg-gray-900 text-white rounded-md text-sm font-semibold flex items-center justify-center gap-2 hover:bg-gray-700 transition duration-300 ease-in-out"
               >
                 {commentLoading && (
                   <span className="loading loading-spinner loading-xs text-white/50"></span>
@@ -229,11 +229,11 @@ function Comments() {
             <h4 className="text-gray-500 text-lg">No Comments Found</h4>
           </div>
         ) : (
-          <ul className="space-y-4">
+          <ul className="space-y-3 flex flex-col">
             {comments.map((c) => (
               <li
                 key={c.id}
-                className="p-4 rounded-lg shadow-md odd:bg-white even:bg-gray-200"
+                className="p-4 w-full rounded-lg shadow-md odd:bg-white even:bg-gray-200"
               >
                 <div className="text-sm mt-1 flex justify-between">
                   <div>
@@ -253,9 +253,12 @@ function Comments() {
                       handleOpenModal();
                       setCommentToDelete(c.id);
                     }}
-                    className="h-9 px-4 py-2 bg-red-400 text-white rounded-md font-medium flex items-center justify-center gap-4 hover:bg-red-300 transition duration-300 ease-in-out cursor-pointer"
+                    className="h-8 px-3 bg-red-400 text-white rounded-md font-medium flex items-center justify-center whitespace-nowrap gap-4 hover:bg-red-300 transition duration-300 ease-in-out cursor-pointer"
                   >
-                    <AiOutlineDelete size="1rem" /> Delete Comment
+                    <span>
+                      <AiOutlineDelete size="1rem" />
+                    </span>
+                    <span className="whitespace-nowrap">Delete Comment</span>
                   </button>
                 </div>
                 <div className="text-gray-800 p-2">

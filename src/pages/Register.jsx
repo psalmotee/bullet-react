@@ -18,6 +18,7 @@ function Register() {
   const [lname, setLname] = useState("");
   const [teamName, setTeamName] = useState("");
   const [enabled, setEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [existingTeams, setExistingTeams] = useState([]);
 
@@ -42,6 +43,7 @@ function Register() {
   }, []);
 
   const handleRegister = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
@@ -67,6 +69,8 @@ function Register() {
         position: "top-right",
         autoClose: 2000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,7 +87,7 @@ function Register() {
             Register your account
           </h2>
         </div>
-        <div className="bg-white shadow-md rounded-lg mt-8 py-9 px-10 w-112">
+        <div className="bg-white shadow-md rounded-lg mt-8 py-8 px-4 sm:px-10 w-full">
           <form
             onSubmit={handleRegister}
             className="flex flex-col items-center"
@@ -206,8 +210,11 @@ function Register() {
 
             <button
               type="submit"
-              className="bg-gray-900 text-white font-medium rounded-md w-full px-4 py-1 cursor-pointer mt-6 hover:bg-gray-800 transition duration-300 ease-in-out"
+              className="bg-gray-900 text-white font-medium rounded-md w-full h-9 px-4 py-2 cursor-pointer mt-6 hover:bg-gray-800 transition duration-300 ease-in-out"
             >
+              {loading && (
+                <span className="loading loading-spinner loading-xs text-white/50"></span>
+              )}{" "}
               Register
             </button>
           </form>

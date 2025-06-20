@@ -27,7 +27,7 @@ function Dashboard() {
             toast.error("User details not found in database.");
           }
         } catch (error) {
-          toast.error("Error fetching user details.", error);
+          toast.error("Error fetching user details.", error,);
           console.error("Error fetching user details:", error);
         }
       } else {

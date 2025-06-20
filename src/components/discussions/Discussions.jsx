@@ -250,7 +250,7 @@ function Discussions() {
         </div>
 
         {/* Table and Modal */}
-        <div className="w-full overflow-x-auto mt-4">
+        <div className="block md:hidden mt-4 space-y-4">
           {loading ? (
             <div className="bg-white shadow-md rounded-lg flex justify-center items-center w-full h-85">
               <span className="loading loading-ring loading-xl"></span>
@@ -261,60 +261,62 @@ function Discussions() {
               <h4 className="text-gray-500 text-lg">No Entries Found</h4>
             </div>
           ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr className="text-gray-500 text-sm">
-                  <th className="h-10 px-2 text-left font-medium">Author</th>
-                  <th className="h-10 px-2 text-left font-medium">Title</th>
-                  <th className="h-10 px-2 text-left font-medium">
-                    Created At
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
-                {currentItems.map((d) => (
-                  <tr
-                    key={d.id}
-                    className="text-sm text-gray-700 odd:bg-white even:bg-gray-200 hover:odd:bg-gray-100 hover:even:hover:bg-gray-300"
-                  >
-                    <td className="p-2 ">{d.authorName || "Unknown"}</td>
-                    <td className="p-2 whitespace-nowrap">{d.title}</td>
-                    <td className="p-2 whitespace-nowrap">
-                      {d.createdAt
-                        ? d.createdAt.toDate().toLocaleString("en-US", {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          })
-                        : "N/A"}
-                    </td>
-                    <td className="p-2 whitespace-nowrap font-bold">
-                      <a
-                        onClick={() =>
-                          navigate(`/dashboard/discussions/${d.id}`)
-                        }
-                        className="text-sm font-bold text-gray-600 hover:text-gray-900 transition duration-300 ease-in-out cursor-pointer"
-                      >
-                        View
-                      </a>
-                    </td>
-                    <td className="p-2 whitespace-nowrap space-x-10">
-                      <button
-                        onClick={() => {
-                          handleOpenModal();
-                          setDiscussionToDelete(d.id);
-                        }}
-                        className="h-9 px-4 py-2 bg-red-400 text-white rounded-md font-medium flex items-center justify-center gap-4 hover:bg-red-300 transition duration-300 ease-in-out cursor-pointer"
-                      >
-                        <span>
-                          <AiOutlineDelete size="1.2rem" />
-                        </span>
-                        <span>Delete Discussion</span>
-                      </button>
-                    </td>
+            <div className="w-full overflow-auto">
+              <table className="w-full divide-y divide-gray-200">
+                <thead>
+                  <tr className="text-gray-500 text-sm">
+                    <th className="h-10 px-2 text-left font-medium">Author</th>
+                    <th className="h-10 px-2 text-left font-medium">Title</th>
+                    <th className="h-10 px-2 text-left font-medium">
+                      Created At
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
+                  {currentItems.map((d) => (
+                    <tr
+                      key={d.id}
+                      className="text-sm text-gray-700 odd:bg-white even:bg-gray-200 hover:odd:bg-gray-100 hover:even:hover:bg-gray-300"
+                    >
+                      <td className="p-2 ">{d.authorName || "Unknown"}</td>
+                      <td className="p-2 whitespace-nowrap">{d.title}</td>
+                      <td className="p-2 whitespace-nowrap">
+                        {d.createdAt
+                          ? d.createdAt.toDate().toLocaleString("en-US", {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            })
+                          : "N/A"}
+                      </td>
+                      <td className="p-2 whitespace-nowrap font-bold">
+                        <a
+                          onClick={() =>
+                            navigate(`/dashboard/discussions/${d.id}`)
+                          }
+                          className="text-sm font-bold text-gray-600 hover:text-gray-900 transition duration-300 ease-in-out cursor-pointer"
+                        >
+                          View
+                        </a>
+                      </td>
+                      <td className="p-2 whitespace-nowrap space-x-10">
+                        <button
+                          onClick={() => {
+                            handleOpenModal();
+                            setDiscussionToDelete(d.id);
+                          }}
+                          className="h-8 px-3 bg-red-400 text-white rounded-md font-medium flex items-center justify-center gap-4 hover:bg-red-300 transition duration-300 ease-in-out cursor-pointer"
+                        >
+                          <span>
+                            <AiOutlineDelete size="1.2rem" />
+                          </span>
+                          <span>Delete Discussion</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
 
           {/* Delete Discussion Modal */}

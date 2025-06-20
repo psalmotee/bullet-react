@@ -33,6 +33,7 @@ function Sidebar({ isDrawerOpen, setIsDrawerOpen }) {
   // };
 
   const handleLogout = async () => {
+    setLoading(true);
     try {
       await auth.signOut();
       localStorage.removeItem("user");
@@ -41,6 +42,8 @@ function Sidebar({ isDrawerOpen, setIsDrawerOpen }) {
     } catch (error) {
       console.error("Error logging out:", error);
       toast.error("Failed to log out.");
+    } finally {
+      setLoading(false);
     }
   };
 

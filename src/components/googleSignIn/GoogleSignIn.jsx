@@ -43,7 +43,7 @@ return (
   <>
     <button
       onClick={handleGoogleSignup}
-      className="flex items-center justify-center gap-2 bg-white border border-gray-300 focus:outline-none text-black rounded-md px-4 py-2 flex h-8 w-full focus:border-sky-500 focus:outline focus:outline-sky-500 cursor-pointer hover:bg-gray-100 transition"
+      className="flex items-center justify-center gap-2 bg-white border border-gray-300 focus:outline-none text-black rounded-md px-4 py-2 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500 cursor-pointer hover:bg-gray-100 transition"
       type="button"
     >
       <span>
