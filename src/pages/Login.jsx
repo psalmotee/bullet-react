@@ -5,7 +5,7 @@ import { auth } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
-// import GithubSignIn from "../components/githubSignIn/GithubSignIn";
+import GithubSignIn from "../components/githubSignIn/GithubSignIn";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -96,7 +96,7 @@ function Login() {
             </form>
             <div className="flex flex-col gap-2 mt-4">
               <GoogleSignIn />
-              {/* <GithubSignIn /> */}
+              <GithubSignIn />
             </div>
             <p className="mt-4 text-sm text-end">
               <span>Don't have an account?</span>{" "}

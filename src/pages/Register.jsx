@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Switch } from "@headlessui/react";
 import { collection, getDocs } from "firebase/firestore";
 import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
-// import GithubSignIn from "../components/githubSignIn/GithubSignIn";
+import GithubSignIn from "../components/githubSignIn/GithubSignIn";
 
 
 function Register() {
@@ -221,7 +221,7 @@ function Register() {
 
           <div className="flex flex-col gap-3 mt-6">
             <GoogleSignIn />
-            {/* <GithubSignIn /> */}
+            <GithubSignIn />
           </div>
 
           <p className="mt-2 text-sm text-end">
