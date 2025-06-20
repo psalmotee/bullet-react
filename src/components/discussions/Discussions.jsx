@@ -250,7 +250,7 @@ function Discussions() {
         </div>
 
         {/* Table and Modal */}
-        <div className="block md:hidden mt-4 space-y-4">
+        <div className="mt-4 space-y-4">
           {loading ? (
             <div className="bg-white shadow-md rounded-lg flex justify-center items-center w-full h-85">
               <span className="loading loading-ring loading-xl"></span>
