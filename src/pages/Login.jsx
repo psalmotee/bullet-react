@@ -5,7 +5,7 @@ import { auth } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
-import GithubSignIn from "../components/githubSignIn/GithubSignIn";
+// import GithubSignIn from "../components/githubSignIn/GithubSignIn";
 
 function Login() {
   const [email, setEmail] = useState("");

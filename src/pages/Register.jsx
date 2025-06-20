@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Switch } from "@headlessui/react";
 import { collection, getDocs } from "firebase/firestore";
 import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
-import GithubSignIn from "../components/githubSignIn/GithubSignIn";
+// import GithubSignIn from "../components/githubSignIn/GithubSignIn";
 
 
 function Register() {
