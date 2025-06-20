@@ -8,6 +8,8 @@ import { LuUsers } from "react-icons/lu";
 import { IoIosClose } from "react-icons/io";
 import { Outlet } from "react-router-dom";
 import Topbar from "../topbar/Topbar";
+import { auth } from "../../firebase/firebase";
+import { toast } from "react-toastify";
 
 const navLinks = [
   { name: "Dashboard", icon: <FiHome />, path: "/dashboard" },
@@ -21,14 +23,27 @@ function Sidebar({ isDrawerOpen, setIsDrawerOpen }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    setLoading(true);
+  // const handleLogout = async () => {
+  //   setLoading(true);
 
-    setTimeout(() => {
+  //   setTimeout(() => {
+  //     localStorage.removeItem("user");
+  //     navigate("/login");
+  //   }, 1000);
+  // };
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
       localStorage.removeItem("user");
       navigate("/login");
-    }, 1000);
+      toast.success("Logged out successfully.");
+    } catch (error) {
+      console.error("Error logging out:", error);
+      toast.error("Failed to log out.");
+    }
   };
+
 
   const toggleDrawer = () => {
     setIsDrawerOpen((prev) => !prev);

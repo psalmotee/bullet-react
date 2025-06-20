@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import Avater from "../../../public/images/avater.png"
 import { toast } from "react-toastify";
 
 function Dashboard() {
   const [userDetails, setUserDetails] = useState(null);
+  const [photoToShow, setPhotoToShow] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +17,9 @@ function Dashboard() {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             setUserDetails(docSnap.data());
+            const customPhoto = docSnap.data().photoURL;
+            const googlePhoto = user.photoURL;
+            setPhotoToShow(customPhoto || googlePhoto || Avater);
             console.log("User details fetched:", docSnap.data());
             toast.success("User details fetched successfully.");
           } else {
@@ -28,6 +33,7 @@ function Dashboard() {
       } else {
         toast.info("No user signed in.");
         setUserDetails(null);
+        setPhotoToShow(Avater);
       }
       setLoading(false);
     });
@@ -65,6 +71,13 @@ function Dashboard() {
           <h2 className="text-2xl font-medium text-black">Dashboard</h2>
         </div>
         <div className="px-4 sm:px-6 md:px-8 py-6 w-full max-w-3xl">
+            <div className="flex justify-center mb-6">
+              <img
+                src={photoToShow}
+                alt="Profile"
+                className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
+              />
+            </div>
           <h1 className="text-xl text-black">
             Welcome{" "}
             <span className="font-bold">

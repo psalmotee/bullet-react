@@ -3,6 +3,9 @@ import { IoIosClose } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import ProfilePhotoUpload from "./ProfilePhotoUpload";
+import Avater from "../../../public/images/avater.png"
+
 import { toast } from "react-toastify";
 
 function ProfilePage() {
@@ -12,6 +15,7 @@ function ProfilePage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
+  const [photo, setPhoto] = useState("");
   const [updating, setUpdating] = useState(false);
 
   const handleUpdateProfile = async () => {
@@ -47,6 +51,10 @@ function ProfilePage() {
             setLastName(data.lastName || "");
             setEmail(data.email || "");
             setBio(data.bio || "");
+            const customPhoto = data.photo;
+            const googlePhoto = auth.currentUser?.photo;
+            const localPhoto = localStorage.getItem("profilePhoto");
+            setPhoto(customPhoto || googlePhoto || localPhoto || Avater);
             toast.success("User details fetched successfully.");
           } else {
             toast.error("User details not found in database.");
@@ -104,6 +112,13 @@ function ProfilePage() {
         <div className="bg-white rounded-lg shadow-md">
           <div className="text-sm text-gray-800">
             <div className="grid border-b border-gray-200 px-4 md:px-6 py-5">
+              <div className="relative flex flex-col items-center">
+                <ProfilePhotoUpload
+                  onPhotoChange={(url) => setPhoto(url)}
+                  initialPhoto={photo}
+                />
+              </div>
+
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="text-lg font-medium">User Information</h3>

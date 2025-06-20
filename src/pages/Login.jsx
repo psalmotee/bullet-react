@@ -1,9 +1,11 @@
 import reactLogo from "@/assets/react.svg";
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
+import GithubSignIn from "../components/githubSignIn/GithubSignIn";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,13 +15,8 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log(user);
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
         toast.success("Login successful!!", {
@@ -29,8 +26,45 @@ function Login() {
         navigate("/dashboard");
       }
     } catch (error) {
-      console.log(error.message);
       toast.error("Error logging in!!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      localStorage.setItem("user", JSON.stringify(user));
+      toast.success("Google login successful!!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Google login failed!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleGithubSignIn = async () => {
+    const provider = new GithubAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      localStorage.setItem("user", JSON.stringify(user));
+      toast.success("GitHub login successful!!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("GitHub login failed!", {
         position: "top-right",
         autoClose: 2000,
       });
@@ -40,30 +74,22 @@ function Login() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        {" "}
         <div className=" w-full max-w-md ">
-          {" "}
           <div className="flex items-center justify-center">
-            {" "}
             <a href="/" className="flex items-center">
-              {" "}
-              <img
-                src={reactLogo}
-                className="h-18 w-auto"
-                alt="React logo"
-              />{" "}
-            </a>{" "}
-          </div>{" "}
+              <img src={reactLogo} className="h-18 w-auto" alt="React logo" />
+            </a>
+          </div>
           <h2 className="text-3xl font-extrabold text-black mt-6 text-center">
-            {" "}
-            Log in to your account{" "}
-          </h2>{" "}
+            Log in to your account
+          </h2>
         </div>
+
         <div className="bg-white shadow-md rounded-lg mt-8 py-9 px-10 w-112">
           <form onSubmit={handleLogin} className="flex flex-col items-center">
             <div className="mb-6 grid grid-cols-1 gap-1 w-full">
               <label htmlFor="email" className="font-medium text-sm">
-                <span class="text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">
+                <span className="text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">
                   Email
                 </span>
               </label>
@@ -77,7 +103,7 @@ function Login() {
             </div>
             <div className="mb-6 w-full grid grid-cols-1 gap-1">
               <label htmlFor="password" className="font-medium text-sm">
-                <span class="after:ml-0.5 after:text-red-500 after:content-['*']">
+                <span className="after:ml-0.5 after:text-red-500 after:content-['*']">
                   Password
                 </span>
               </label>
@@ -94,14 +120,18 @@ function Login() {
               Login
             </button>
           </form>
+          <div className="flex flex-col gap-2 mt-4">
+           <GoogleSignIn />
+            {/* <GithubSignIn /> */}
+          </div>
           <p className="mt-4 text-sm text-end">
-            Don't have an account?{" "}
+            <span>Don't have an account?</span>{" "}
             <a href="/register" className="text-blue-700 hover:text-blue-900">
-              Register
+               Register
             </a>
           </p>
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 }
