@@ -1,21 +1,21 @@
-// import { useState } from 'react'
-import {
-  createBrowserRouter,
-  RouterProvider
-} from "react-router-dom";
-// import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+// Pages
 import Landing from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
+// Layout
+import DashboardLayout from "./components/layout/DashboardLayout";
+
+// Dashboard Components
 import Dashboard from "./components/dashboard/Dashboard";
 import Discussions from "./components/discussions/Discussions";
-import ViewDiscussion from "./components/disucussion-details/ViewDiscussion";
+import ViewDiscussion from "./components/discussion-details/ViewDiscussion";
 import Users from "./components/users/Users";
 import ProfilePage from "./components/profile/ProfilePage";
-import DashboardLayout from "./pages/DashboardLayout";
-
 
 const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
@@ -31,8 +31,8 @@ const router = createBrowserRouter([
       {
         path: "discussions",
         children: [
-          { index: true, element: <Discussions /> }, // /dashboard/discussions
-          { path: ":id", element: <ViewDiscussion /> }, // /dashboard/discussions/:id
+          { index: true, element: <Discussions /> },
+          { path: ":id", element: <ViewDiscussion /> },
         ],
       },
     ],
@@ -42,9 +42,19 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <ToastContainer />
       <RouterProvider router={router} />
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 }

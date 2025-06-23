@@ -1,49 +1,82 @@
-import reactLogo from "@/assets/react.svg";
-import { BiHome } from "react-icons/bi";
-import { FaGithub } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { Home, Github } from "lucide-react";
+import reactLogo from "../assets/react.svg";
+import Button from "../components/ui/Button";
 
-function Landing() {
+const Landing = () => {
   const navigate = useNavigate();
+  
   return (
-    <>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h2 className="text-4xl font-extrabold text-black">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+      <div className="text-center max-w-4xl mx-auto">
+        {/* Logo */}
+        <img 
+          src={reactLogo} 
+          className="h-24 mx-auto mb-8 animate-spin-slow" 
+          alt="React logo" 
+        />
+        
+        {/* Title */}
+        <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6">
           Bulletproof React
-        </h2>
-        <img src={reactLogo} className="h-55 mt-8" alt="React logo" />
-        <p className="text-gray-900 mt-8">
+        </h1>
+        
+        {/* Subtitle */}
+        <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
           Showcasing Best Practices For Building React Applications
         </p>
-        <div className="flex lg:flex-row space-x-3 items-center">
-          <button
-            type="button"
-            className="mt-8 h-9 px-4 py-2 bg-gray-900 font-semibold text-sm text-white rounded-md flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
-            onClick={() => {
-              navigate("/login");
-            }}
+        
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button
+            size="lg"
+            onClick={() => navigate("/login")}
+            className="min-w-[200px]"
           >
-            <span className="flex items-center inline-block mr-4">
-              <BiHome size="24" />
-            </span>
+            <Home size={20} />
             Get Started
-          </button>
-          <div className="mt-8 h-9 px-4 py-2 bg-white text-black rounded-md text-sm font-semibold flex items-center justify-center border border-gray-300 hover:bg-gray-100 transition duration-300 ease-all cursor-pointer">
-            <a
-              href="http://github.com/psalmotee"
-              target="_blank"
-              className="flex items-center"
-            >
-              <span className="inline-block mr-4">
-                <FaGithub size="24" />
-              </span>
-              Github Repo
-            </a>
-          </div>
+          </Button>
+          
+          <Button
+            variant="secondary"
+            size="lg"
+            className="min-w-[200px]"
+            onClick={() => window.open("http://github.com/psalmotee", "_blank")}
+          >
+            <Github size={20} />
+            Github Repo
+          </Button>
         </div>
       </div>
-    </>
+      
+      {/* Features Grid */}
+      <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Home className="text-blue-600" size={24} />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Modern Architecture</h3>
+          <p className="text-gray-600">Built with the latest React patterns and best practices</p>
+        </div>
+        
+        <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Github className="text-green-600" size={24} />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Open Source</h3>
+          <p className="text-gray-600">Free and open source with comprehensive documentation</p>
+        </div>
+        
+        <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Home className="text-purple-600" size={24} />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Production Ready</h3>
+          <p className="text-gray-600">Scalable and maintainable code structure</p>
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
 export default Landing;
