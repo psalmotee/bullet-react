@@ -10,7 +10,6 @@ import { collection, getDocs } from "firebase/firestore";
 import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
 import GithubSignIn from "../components/githubSignIn/GithubSignIn";
 
-
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -151,17 +150,13 @@ function Register() {
 
             <div className="flex items-center space-x-1 w-full">
               {/* Toggle */}
-              <div className="rounded-full p-1 focus-within:border-gray-300 focus-within:ring-2 focus-within:ring-black transition">
-                <Switch
+              <div className="rounded-full p-1 focus-within:ring-2">
+                <input
                   checked={enabled}
-                  onChange={setEnabled}
-                  className="group relative flex h-6 w-12 cursor-pointer rounded-full bg-gray-300 p-1 ease-in-out focus:not-data-focus:outline-none data-checked:bg-black/100 data-focus:outline data-focus:outline-white/10"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none inline-block size-4 translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out group-data-checked:translate-x-6"
-                  />
-                </Switch>
+                  onChange={(e) => setEnabled(e.target.checked)}
+                  type="checkbox"
+                  className="toggle toggle-md text:w-8 border-none bg-gray-300 text-white checked:border-none checked:bg-black/100 checked:text-white"
+                />
               </div>
 
               <span className="text-sm font-medium text-gray-900">
