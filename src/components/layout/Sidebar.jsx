@@ -1,8 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { Home, MessageSquare, Users, X } from "lucide-react";
-import { auth } from "../../firebase/firebase";
-import { toast } from "react-toastify";
+import { useAuthActions } from "../../hooks/useAuth";
 import reactLogo from "../../assets/react.svg";
 import Button from "../ui/Button";
 
@@ -13,22 +11,14 @@ const navLinks = [
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const [loading, setLoading] = useState(false);
+  const { signOut, loading } = useAuthActions();
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    setLoading(true);
-    try {
-      await auth.signOut();
-      localStorage.removeItem("user");
+    const success = await signOut();
+    if (success) {
       navigate("/login");
-      toast.success("Logged out successfully.");
-    } catch (error) {
-      console.error("Error logging out:", error);
-      toast.error("Failed to log out.");
-    } finally {
-      setLoading(false);
     }
   };
 

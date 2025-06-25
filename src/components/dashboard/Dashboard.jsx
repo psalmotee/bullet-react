@@ -1,44 +1,9 @@
-import { useEffect, useState } from "react";
-import { auth, db } from "../../firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
+import { useAuth } from "../../hooks/useAuth";
 import { LoadingScreen } from "../ui/LoadingSpinner";
 import Avater from "../../../public/images/avater.png";
 
 const Dashboard = () => {
-  const [userDetails, setUserDetails] = useState(null);
-  const [photoToShow, setPhotoToShow] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const docRef = doc(db, "Users", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUserDetails(docSnap.data());
-            const customPhoto = docSnap.data().photoURL;
-            const googlePhoto = user.photoURL;
-            setPhotoToShow(customPhoto || googlePhoto || Avater);
-            toast.success("Welcome back!");
-          } else {
-            toast.error("User details not found in database.");
-          }
-        } catch (error) {
-          toast.error("Error fetching user details.");
-          console.error("Error fetching user details:", error);
-        }
-      } else {
-        toast.info("No user signed in.");
-        setUserDetails(null);
-        setPhotoToShow(Avater);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const { userDetails, loading } = useAuth();
 
   if (loading) {
     return <LoadingScreen message="Loading dashboard..." />;
@@ -57,6 +22,8 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  const photoToShow = userDetails.photoURL || Avater;
 
   return (
     <div className="space-y-8">

@@ -1,37 +1,8 @@
-import { useState, useEffect } from "react";
-import { auth, db } from "../../firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
+import { useAuth } from "../../hooks/useAuth";
 import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const Users = () => {
-  const [userDetails, setUserDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const docRef = doc(db, "Users", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUserDetails(docSnap.data());
-          } else {
-            toast.error("User details not found in database.");
-          }
-        } catch (error) {
-          console.error("Error fetching user details:", error);
-          toast.error("Error fetching user details.");
-        }
-      } else {
-        toast.info("No user signed in.");
-        setUserDetails(null);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const { userDetails, loading } = useAuth();
 
   if (loading) {
     return <LoadingScreen message="Loading users..." />;
