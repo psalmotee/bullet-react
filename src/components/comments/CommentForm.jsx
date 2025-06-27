@@ -1,16 +1,20 @@
-import { useState } from 'react';
-import Textarea from '../ui/Textarea';
-import Button from '../ui/Button';
+import { useState } from "react";
+import Textarea from "../ui/Textarea";
+import Button from "../ui/Button";
 
-const CommentForm = ({ onSubmit, onCancel, loading = false,  submitText = "Submit",
- }) => {
-  const [body, setBody] = useState('');
+const CommentForm = ({
+  onSubmit,
+  onCancel,
+  loading = false,
+  submitText = "Submit",
+}) => {
+  const [body, setBody] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!body.trim()) return;
     onSubmit({ body });
-    setBody('');
+    setBody("");
   };
 
   return (
