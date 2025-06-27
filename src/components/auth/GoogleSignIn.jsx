@@ -3,7 +3,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import GoogleImage from "../../../public/images/GoogleImage.png";
+import GoogleImage from "../../assets/images/GoogleImage.png";
 import Button from "../ui/Button";
 
 const GoogleSignIn = () => {
