@@ -8,7 +8,7 @@ const ProfileForm = ({
   onSubmit, 
   onCancel, 
   loading = false,
-  // submitText = 'Submit'
+  submitText = 'Submit'
 }) => {
   const [firstName, setFirstName] = useState(initialData.firstName || '');
   const [lastName, setLastName] = useState(initialData.lastName || '');
@@ -62,7 +62,7 @@ const ProfileForm = ({
           <span className="mx-2">Close</span>
         </Button>
         <Button type="submit" size="sm" loading={loading}>
-          <span className="mx-2">Submit</span>
+          <span className="mx-2">{submitText}</span>
         </Button>
       </div>
     </form>

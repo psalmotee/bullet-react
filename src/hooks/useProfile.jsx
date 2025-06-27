@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { auth, db } from '../firebase/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import Avatar from "../assets/images/avatar.png";
+
 import { toast } from 'react-toastify';
 
 export const useProfile = () => {
@@ -33,7 +35,7 @@ export const useProfile = () => {
             const customPhoto = data.photoURL;
             const googlePhoto = user.photoURL;
             const localPhoto = localStorage.getItem("profilePhoto");
-            setPhoto(customPhoto || googlePhoto || localPhoto || "");
+            setPhoto(customPhoto || googlePhoto || localPhoto || Avatar);
           } else {
             toast.error("User details not found in database.");
           }
