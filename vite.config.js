@@ -12,9 +12,11 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ["@headlessui/react", "@ant-design/icons", "firebase/app",
+    include: [
+      "firebase/app",
       "firebase/auth",
       "firebase/firestore",
-      "firebase/storage",],
+      "firebase/storage",
+    ],
   },
 });
