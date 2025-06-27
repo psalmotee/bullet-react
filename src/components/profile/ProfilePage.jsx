@@ -4,7 +4,7 @@ import { useModal } from "../../hooks/useModal";
 import Button from "../ui/Button";
 import Drawer from "../ui/Drawer";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
-import ProfileForm from "./profileForm";
+import ProfileForm from "./ProfileForm";
 import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const ProfilePage = () => {
@@ -135,7 +135,7 @@ const ProfilePage = () => {
       >
         <ProfileForm
           initialData={userDetails}
-          onSubmit={handleUpdateProfile}
+          onSubmit={updateFormData}
           onCancel={closeDrawer}
           loading={updating}
           submitText="Update Profile"
