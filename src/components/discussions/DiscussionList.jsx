@@ -1,19 +1,17 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Trash } from 'lucide-react';
-import Button from '../ui/Button';
-import EmptyState from '../ui/EmptyState';
-import { ConfirmModal } from '../ui/Modal';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Trash } from "lucide-react";
+import Button from "../ui/Button";
+import EmptyState from "../ui/EmptyState";
 import { LoadingScreen } from "../ui/LoadingSpinner";
+import { ConfirmModal } from "../ui/Modal";
 
-
-const DiscussionList = ({ 
-  discussions = [], 
-  loading = false, 
-  onDelete 
-}) => {
+const DiscussionList = ({ discussions = [], loading = false, onDelete }) => {
   const navigate = useNavigate();
-  const [deleteModal, setDeleteModal] = useState({ isOpen: false, discussionId: null });
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    discussionId: null,
+  });
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleDeleteClick = (discussionId) => {
@@ -22,13 +20,13 @@ const DiscussionList = ({
 
   const handleDeleteConfirm = async () => {
     if (!deleteModal.discussionId) return;
-    
+
     setDeleteLoading(true);
     try {
       await onDelete(deleteModal.discussionId);
       setDeleteModal({ isOpen: false, discussionId: null });
     } catch (error) {
-      console.error('Delete error:', error);
+      console.error("Delete error:", error);
     } finally {
       setDeleteLoading(false);
     }
@@ -45,8 +43,8 @@ const DiscussionList = ({
   if (discussions.length === 0) {
     return (
       <div className="bg-white shadow-md rounded-lg">
-        <EmptyState 
-          title="No discussions found"
+        <EmptyState
+          title="No Entries Found"
           description="Create your first discussion to get started"
         />
       </div>
@@ -55,9 +53,9 @@ const DiscussionList = ({
 
   return (
     <>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full divide-y divide-gray-200 ">
+      <div className="bg-white shadow-md rounded-lg">
+        <div>
+          <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="h-10 px-2 text-left text-sm font-medium text-gray-500 tracking-wider">
@@ -81,7 +79,7 @@ const DiscussionList = ({
               {discussions.map((discussion) => (
                 <tr
                   key={discussion.id}
-                  className="odd:bg-white even:bg-gray-200 hover:odd:bg-gray-100 hover:even:bg-gray-300"
+                  className="odd:bg-white even:bg-gray-200 hover:odd:bg-gray-100 hover:even:bg-gray-300 transition-colors"
                 >
                   <td className="p-2 whitespace-nowrap text-sm text-gray-900">
                     {discussion.authorName || "Unknown"}
@@ -97,7 +95,7 @@ const DiscussionList = ({
                         })
                       : "N/A"}
                   </td>
-                  <td className="p-2 whitespace-nowrap text-xs font-medium">
+                  <td className="p-2 whitespace-nowrap text-sm font-medium space-x-3">
                     <a
                       onClick={() =>
                         navigate(`/dashboard/discussions/${discussion.id}`)
@@ -114,7 +112,6 @@ const DiscussionList = ({
                       onClick={() => handleDeleteClick(discussion.id)}
                     >
                       <Trash size={16} />
-                      <span className="sr-only">Delete Discussion</span>
                       <span className="mx-2">Delete Discussion</span>
                     </Button>
                   </td>

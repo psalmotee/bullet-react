@@ -1,19 +1,19 @@
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 
-const Drawer = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
+const Drawer = ({
+  isOpen,
+  onClose,
+  title,
+  children,
   footer,
-  position = 'right',
+  position = "right",
   // size = 'xs'
 }) => {
   const positions = {
-    left: 'left-0',
-    right: 'right-0'
+    left: "left-0",
+    right: "right-0",
   };
-  
+
   // const sizes = {
   //   xs: 'w-60',
   //   sm: 'w-80',
@@ -60,11 +60,10 @@ const Drawer = ({
           </div>
 
           {/* Content */}
-            {children}
+          {children}
 
           {/* Footer */}
-            {footer}
-          
+          {footer}
         </div>
       </div>
     </>

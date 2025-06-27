@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserRound, PanelLeft } from "lucide-react";
 
-
 const Topbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,11 +20,11 @@ const Topbar = ({ onMenuClick }) => {
         setIsDropdownOpen(false);
       }
     }
-    
+
     if (isDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };

@@ -1,93 +1,31 @@
-import { Edit, Pen } from "lucide-react";
-import { useEffect, useState } from "react";
-import { auth, db } from "../../firebase/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
+import { Pen } from "lucide-react";
+import { useProfile, useProfileActions } from "../../hooks/useProfile";
+import { useModal } from "../../hooks/useModal";
 import Button from "../ui/Button";
 import Drawer from "../ui/Drawer";
-import Input from "../ui/Input";
-import Textarea from "../ui/Textarea";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
+import ProfileForm from "./ProfileForm";
 import { LoadingScreen } from "../ui/LoadingSpinner";
-import Avater from "../../../public/images/avater.png";
 
 const ProfilePage = () => {
-  const [userDetails, setUserDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [photo, setPhoto] = useState("");
-
-  // Form state
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    bio: "",
-  });
+  const {
+    userDetails,
+    loading,
+    photo,
+    setPhoto,
+    formData,
+    updateFormData,
+    setUserDetails,
+  } = useProfile();
+  const { updateProfile, updating } = useProfileActions();
+  const { isOpen: isDrawerOpen, open: openDrawer, close: closeDrawer } = useModal();
 
   const handleUpdateProfile = async () => {
-    const user = auth.currentUser;
-    if (!user) {
-      toast.error("User not authenticated.");
-      return;
-    }
-
-    setUpdating(true);
-    try {
-      const userRef = doc(db, "Users", user.uid);
-      await updateDoc(userRef, formData);
-
-      toast.success("Profile updated successfully!");
+    const success = await updateProfile(formData);
+    if (success) {
       setUserDetails((prev) => ({ ...prev, ...formData }));
-      setIsDrawerOpen(false);
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile.");
-    } finally {
-      setUpdating(false);
+      closeDrawer();
     }
-  };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const docRef = doc(db, "Users", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setUserDetails(data);
-            setFormData({
-              firstName: data.firstName || "",
-              lastName: data.lastName || "",
-              email: data.email || "",
-              bio: data.bio || "",
-            });
-
-            const customPhoto = data.photoURL;
-            const googlePhoto = user.photoURL;
-            const localPhoto = localStorage.getItem("profilePhoto");
-            setPhoto(customPhoto || googlePhoto || localPhoto || Avater);
-          } else {
-            toast.error("User details not found in database.");
-          }
-        } catch (error) {
-          toast.error("Error fetching user details.");
-          console.error("Error fetching user details:", error);
-        }
-      } else {
-        toast.info("No user signed in.");
-        setUserDetails(null);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   if (loading) {
@@ -118,7 +56,7 @@ const ProfilePage = () => {
 
         <div className="px-4 sm:px-6 md:px-8 py-6">
           <div className="flex justify-end">
-            <Button size="sm" onClick={() => setIsDrawerOpen(true)}>
+            <Button size="sm" onClick={openDrawer} variant="primary">
               <Pen size={16} />
               <span className="sr-only">Update Profile</span>
               <span className="mx-2">Update Profile</span>
@@ -188,50 +126,17 @@ const ProfilePage = () => {
       {/* Edit Profile Drawer */}
       <Drawer
         isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={closeDrawer}
         title="Update Profile"
-        footer={
-          <div className="flex justify-end gap-3">
-            <Button variant="secondary" onClick={() => setIsDrawerOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={handleUpdateProfile} loading={updating}>
-              Save Changes
-            </Button>
-          </div>
-        }
+        
       >
-        <div className="space-y-6">
-          <Input
-            label="First Name"
-            value={formData.firstName}
-            onChange={(e) => handleInputChange("firstName", e.target.value)}
-            required
-          />
-
-          <Input
-            label="Last Name"
-            value={formData.lastName}
-            onChange={(e) => handleInputChange("lastName", e.target.value)}
-            required
-          />
-
-          <Input
-            label="Email"
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            required
-          />
-
-          <Textarea
-            label="Bio"
-            value={formData.bio}
-            onChange={(e) => handleInputChange("bio", e.target.value)}
-            placeholder="Tell us about yourself..."
-            rows={4}
-          />
-        </div>
+        <ProfileForm
+          initialData={userDetails}
+          onSubmit={handleUpdateProfile}
+          onCancel={closeDrawer}
+          loading={updating}
+          submitText="Update Profile"
+        />
       </Drawer>
     </>
   );

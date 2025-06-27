@@ -8,13 +8,13 @@ import Button from "../ui/Button";
 
 const GoogleSignIn = () => {
   const navigate = useNavigate();
-  
+
   const handleGoogleSignup = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
+
       await setDoc(
         doc(db, "Users", user.uid),
         {
@@ -28,17 +28,11 @@ const GoogleSignIn = () => {
         },
         { merge: true }
       );
-      
-      toast.success("Signed up with Google!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+
+      toast.success("Signed up with Google!");
       navigate("/dashboard");
     } catch (error) {
-      toast.error("Google signup failed!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+      toast.error(`Google signup failed!: ${error.message}`);
     }
   };
 

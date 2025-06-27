@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { Trash, Trash2 } from 'lucide-react';
-import Button from '../ui/Button';
-import EmptyState from '../ui/EmptyState';
-import { ConfirmModal } from '../ui/Modal';
+import { useState } from "react";
+import { Trash } from "lucide-react";
+import Button from "../ui/Button";
+import EmptyState from "../ui/EmptyState";
+import { ConfirmModal } from "../ui/Modal";
+import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const CommentList = ({ comments = [], onDelete, loading = false }) => {
-  const [deleteModal, setDeleteModal] = useState({ isOpen: false, commentId: null });
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    commentId: null,
+  });
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleDeleteClick = (commentId) => {
@@ -14,13 +18,13 @@ const CommentList = ({ comments = [], onDelete, loading = false }) => {
 
   const handleDeleteConfirm = async () => {
     if (!deleteModal.commentId) return;
-    
+
     setDeleteLoading(true);
     try {
       await onDelete(deleteModal.commentId);
       setDeleteModal({ isOpen: false, commentId: null });
     } catch (error) {
-      console.error('Delete error:', error);
+      console.error("Delete error:", error);
     } finally {
       setDeleteLoading(false);
     }
@@ -29,14 +33,14 @@ const CommentList = ({ comments = [], onDelete, loading = false }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <LoadingScreen message="Loading comments..." />
       </div>
     );
   }
 
   if (comments.length === 0) {
     return (
-      <EmptyState 
+      <EmptyState
         title="No comments yet"
         description="Be the first to comment on this discussion"
       />
@@ -53,13 +57,14 @@ const CommentList = ({ comments = [], onDelete, loading = false }) => {
           >
             <div className="flex justify-between mb-3">
               <div className="text-xs text-black">
-                <span className='font-semibold'>
+                <span className="font-semibold">
                   {comment.createdAt?.toDate().toLocaleString("en-US", {
                     dateStyle: "medium",
                     timeStyle: "short",
                   }) || "Unknown time"}
-                </span> 
-                <span className="font-bold">{" by "}
+                </span>
+                <span className="font-bold">
+                  {" by "}
                   {comment.authorName || "Unknown"}
                 </span>
               </div>

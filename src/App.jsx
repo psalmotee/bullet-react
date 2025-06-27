@@ -1,38 +1,99 @@
+import { lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Pages
-import Landing from "./pages/LandingPage";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import LazyWrapper from "./components/common/LazyWrapper";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import { LoadingScreen } from "./components/ui/LoadingSpinner";
 
-// Layout
-import DashboardLayout from "./components/layout/DashboardLayout";
-
-// Dashboard Components
-import Dashboard from "./components/dashboard/Dashboard";
-import Discussions from "./components/discussions/Discussions";
-import ViewDiscussion from "./components/discussion-details/ViewDiscussion";
-import Users from "./components/users/Users";
-import ProfilePage from "./components/profile/ProfilePage";
+// Lazy load pages and components
+const Landing = lazy(() => import("./pages/LandingPage"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const DashboardLayout = lazy(() => import("./components/layout/DashboardLayout"));
+const Dashboard = lazy(() => import("./components/dashboard/Dashboard"));
+const Discussions = lazy(() => import("./components/discussions/Discussions"));
+const ViewDiscussion = lazy(() => import("./components/discussion-details/ViewDiscussion"));
+const Users = lazy(() => import("./components/users/Users"));
+const ProfilePage = lazy(() => import("./components/profile/ProfilePage"));
 
 const router = createBrowserRouter([
-  { path: "/", element: <Landing /> },
-  { path: "/login", element: <Login /> },
-  { path: "/register", element: <Register /> },
+  {
+    path: "/",
+    element: (
+      <LazyWrapper fallback={<LoadingScreen message="Loading..." />}>
+        <Landing />
+      </LazyWrapper>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <LazyWrapper fallback={<LoadingScreen message="Loading login..." />}>
+        <Login />
+      </LazyWrapper>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <LazyWrapper fallback={<LoadingScreen message="Loading registration..." />}>
+        <Register />
+      </LazyWrapper>
+    ),
+  },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <LazyWrapper fallback={<LoadingScreen message="Loading dashboard..." />}>
+        <DashboardLayout />
+      </LazyWrapper>
+    ),
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: "profile", element: <ProfilePage /> },
-      { path: "users", element: <Users /> },
+      {
+        index: true,
+        element: (
+          <LazyWrapper fallback={<LoadingScreen message="Loading dashboard..." />}>
+            <Dashboard />
+          </LazyWrapper>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <LazyWrapper fallback={<LoadingScreen message="Loading profile..." />}>
+            <ProfilePage />
+          </LazyWrapper>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <LazyWrapper fallback={<LoadingScreen message="Loading users..." />}>
+            <Users />
+          </LazyWrapper>
+        ),
+      },
       {
         path: "discussions",
         children: [
-          { index: true, element: <Discussions /> },
-          { path: ":id", element: <ViewDiscussion /> },
+          {
+            index: true,
+            element: (
+              <LazyWrapper fallback={<LoadingScreen message="Loading discussions..." />}>
+                <Discussions />
+              </LazyWrapper>
+            ),
+          },
+          {
+            path: ":id",
+            element: (
+              <LazyWrapper fallback={<LoadingScreen message="Loading discussion..." />}>
+                <ViewDiscussion />
+              </LazyWrapper>
+            ),
+          },
         ],
       },
     ],
@@ -41,23 +102,21 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
-      <div>
-        <RouterProvider router={router} />
-        <ToastContainer
-          position="top-right"
-          autoClose={1000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </div>
-    </>
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </ErrorBoundary>
   );
 }
 

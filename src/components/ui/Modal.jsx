@@ -1,20 +1,19 @@
-import { X, AlertCircle } from 'lucide-react';
-import Button from './Button';
+import { X, AlertCircle } from "lucide-react";
+import Button from "./Button";
 
-const Modal = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
   showCloseButton = true,
-  size = 'xl'
 }) => {
-  const sizes = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl'
-  };
+  // const sizes = {
+  //   sm: 'max-w-sm',
+  //   md: 'max-w-md',
+  //   lg: 'max-w-lg',
+  //   xl: 'max-w-xl'
+  // };
 
   if (!isOpen) return null;
 
@@ -45,16 +44,16 @@ const Modal = ({
   );
 };
 
-const ConfirmModal = ({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
-  title, 
-  message, 
-  confirmText = 'Confirm',
-  cancelText = 'Close',
+const ConfirmModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmText = "Confirm",
+  cancelText = "Close",
   loading = false,
-  variant = 'danger'
+  variant = "danger",
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">

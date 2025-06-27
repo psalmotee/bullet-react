@@ -33,18 +33,12 @@ const GithubSignIn = () => {
         { merge: true }
       );
 
-      toast.success("Signed up with GitHub!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+      toast.success("Signed up with GitHub!");
 
       navigate("/dashboard");
     } catch (error) {
       console.error("GitHub Sign In Error:", error);
-      toast.error(`GitHub signup failed! ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error(`GitHub signup failed!: ${error.message}`);
     }
   };
 
