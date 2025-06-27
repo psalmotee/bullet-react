@@ -23,68 +23,63 @@ const Users = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col w-full">
       {/* Header */}
-      <div>
+      <div className="px-4 sm:px-6 md:px-8">
         <h1 className="text-2xl font-semibold text-gray-900">Users</h1>
-        <p className="text-gray-600">Manage user information</p>
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  First Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Last Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Created At
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              <tr className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {userDetails.firstName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {userDetails.lastName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {userDetails.email}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                    {userDetails.role === "Admin"
-                      ? `Admin: ${userDetails.teamName}`
-                      : userDetails.role === "Member"
-                      ? `Member: ${userDetails.teamName}`
-                      : "No role"}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {userDetails.createdAt
-                    ? userDetails.createdAt.toDate().toLocaleString("en-US", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })
-                    : "N/A"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div className="px-4 sm:px-6 md:px-8 py-6">
+        <table className="w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-2 h-10 text-left font-medium text-gray-500 tracking-wider">
+                First Name
+              </th>
+              <th className="px-2 h-10 text-left font-medium text-gray-500 tracking-wider">
+                Last Name
+              </th>
+              <th className="px-2 h-10 text-left font-medium text-gray-500 tracking-wider">
+                Email
+              </th>
+              <th className="px-2 h-10 text-left font-medium text-gray-500 tracking-wider">
+                Role
+              </th>
+              <th className="px-2 h-10 text-left font-medium text-gray-500 tracking-wider">
+                Created At
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <tr className="hover:bg-gray-50">
+              <td className="p-2 h-10 whitespace-nowrap text-sm text-gray-900">
+                {userDetails.firstName}
+              </td>
+              <td className="p-2 h-10 whitespace-nowrap text-sm text-gray-900">
+                {userDetails.lastName}
+              </td>
+              <td className="p-2 h-10 whitespace-nowrap text-sm text-gray-900">
+                {userDetails.email}
+              </td>
+              <td className="p-2 h-10 whitespace-nowrap text-sm text-gray-900 uppercase">
+                {userDetails.role === "Admin"
+                  ? `Admin: ${userDetails.teamName}`
+                  : userDetails.role === "Member"
+                  ? `Member: ${userDetails.teamName}`
+                  : "No role"}
+              </td>
+              <td className="p-2 h-10 whitespace-nowrap text-sm text-gray-900">
+                {userDetails.createdAt
+                  ? userDetails.createdAt.toDate().toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })
+                  : "N/A"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );
