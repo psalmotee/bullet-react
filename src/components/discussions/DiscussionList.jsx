@@ -53,8 +53,8 @@ const DiscussionList = ({ discussions = [], loading = false, onDelete }) => {
 
   return (
     <>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-white shadow-md rounded-lg">
+        <div>
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
