@@ -1,11 +1,14 @@
 import { useState, useCallback, useEffect } from "react";
+import { Camera } from "lucide-react";
 import Cropper from "react-easy-crop";
 import CroppedImage from "../../utils/CroppedImage";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase";
 import { toast } from "react-toastify";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
 
-function ProfilePhotoUpload({ onPhotoChange = () => {}, initialPhoto = "" }) {
+const ProfilePhotoUpload = ({ onPhotoChange = () => {}, initialPhoto = "" }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -13,7 +16,6 @@ function ProfilePhotoUpload({ onPhotoChange = () => {}, initialPhoto = "" }) {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [photoURL, setPhotoURL] = useState("");
 
-  // Set the initial photo when component mounts or prop changes
   useEffect(() => {
     if (initialPhoto) {
       setPhotoURL(initialPhoto);
@@ -25,7 +27,7 @@ function ProfilePhotoUpload({ onPhotoChange = () => {}, initialPhoto = "" }) {
         onPhotoChange(stored);
       }
     }
-  }, [initialPhoto]);
+  }, [initialPhoto, onPhotoChange]);
 
   const onCropComplete = useCallback((_, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -49,13 +51,11 @@ function ProfilePhotoUpload({ onPhotoChange = () => {}, initialPhoto = "" }) {
     onPhotoChange(base64Image);
     setCropModalOpen(false);
 
-    // Save base64 to Firestore if logged in
     const user = auth.currentUser;
     if (user) {
       try {
         const userRef = doc(db, "Users", user.uid);
         await updateDoc(userRef, { photoURL: base64Image });
-        console.log("Base64 profile photo saved to Firestore.");
         toast.success("Profile photo updated successfully.");
       } catch (err) {
         console.error("Failed to save photo to Firestore:", err);
@@ -65,55 +65,71 @@ function ProfilePhotoUpload({ onPhotoChange = () => {}, initialPhoto = "" }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <img
-        src={photoURL || "https://via.placeholder.com/150"}
-        alt="Profile"
-        className="w-20 h-20 rounded-full object-cover shadow"
-      />
-      <label className="text-xs text-blue-600 cursor-pointer hover:underline">
-        Change Photo
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={handleFileChange}
-        />
-      </label>
+    <>
+      <div className="flex flex-col items-center gap-3">
+        <div className="relative">
+          <img
+            src={photoURL || "https://via.placeholder.com/150"}
+            alt="Profile"
+            className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-gray-200"
+          />
+          <label className="absolute bottom-0 right-0 bg-gray-900 text-white p-2 rounded-full cursor-pointer hover:bg-gray-700 transition-colors">
+            <Camera size={16} />
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </label>
+        </div>
+        <p className="text-sm text-gray-600">Click camera icon to change photo</p>
+      </div>
 
-      {cropModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center">
-          <div className="bg-white p-4 rounded-lg max-w-lg w-full">
-            <div className="relative aspect-square w-full bg-gray-100">
-              <Cropper
-                image={imageSrc}
-                crop={crop}
-                zoom={zoom}
-                aspect={1}
-                onCropChange={setCrop}
-                onZoomChange={setZoom}
-                onCropComplete={onCropComplete}
-              />
-            </div>
-            <div className="mt-4 flex justify-end gap-3">
-              <button
-                onClick={() => setCropModalOpen(false)}
-                className="px-4 py-1 bg-gray-300 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCropConfirm}
-                className="px-4 py-1 bg-blue-600 text-white rounded"
-              >
-                Save
-              </button>
-            </div>
+      <Modal
+        isOpen={cropModalOpen}
+        onClose={() => setCropModalOpen(false)}
+        title="Crop Profile Photo"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden">
+            <Cropper
+              image={imageSrc}
+              crop={crop}
+              zoom={zoom}
+              aspect={1}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Zoom</label>
+            <input
+              type="range"
+              min={1}
+              max={3}
+              step={0.1}
+              value={zoom}
+              onChange={(e) => setZoom(e.target.value)}
+              className="w-full"
+            />
+          </div>
+          
+          <div className="flex justify-end gap-3">
+            <Button variant="secondary" onClick={() => setCropModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCropConfirm}>
+              Save Photo
+            </Button>
           </div>
         </div>
-      )}
-    </div>
+      </Modal>
+    </>
   );
-}
+};
 
 export default ProfilePhotoUpload;

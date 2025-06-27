@@ -1,49 +1,60 @@
-import reactLogo from "@/assets/react.svg";
+import { useNavigate } from "react-router-dom";
 import { BiHome } from "react-icons/bi";
 import { FaGithub } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import reactLogo from "../assets/icons/reactLogo.svg";
+import Button from "../components/ui/Button";
 
-function Landing() {
+const Landing = () => {
   const navigate = useNavigate();
+  
   return (
-    <>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h2 className="text-4xl font-extrabold text-black">
+    <div className="min-h-screen flex items-center justify-center bg-white mx-aut px-4 py-6 sm:p-6">
+      <div className="text-center max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
           Bulletproof React
-        </h2>
-        <img src={reactLogo} className="h-55 mt-8" alt="React logo" />
-        <p className="text-gray-900 mt-8">
+        </h1>
+
+        {/* Logo */}
+        <div className="flex justify-center">
+          <img
+            src={reactLogo}
+            className="w-auto"
+            alt="React logo"
+          />
+        </div>
+
+        {/* Subtitle */}
+        <p>
           Showcasing Best Practices For Building React Applications
         </p>
-        <div className="flex lg:flex-row space-x-3 items-center">
-          <button
-            type="button"
-            className="mt-8 h-9 px-4 py-2 bg-gray-900 font-semibold text-sm text-white rounded-md flex items-center hover:bg-gray-700 transition duration-300 ease-all cursor-pointer"
-            onClick={() => {
-              navigate("/login");
-            }}
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          <Button
+            size="md"
+            onClick={() => navigate("/login")}
           >
-            <span className="flex items-center inline-block mr-4">
-              <BiHome size="24" />
+            <span className="mr-2">
+              <BiHome size={24} />
             </span>
             Get Started
-          </button>
-          <div className="mt-8 h-9 px-4 py-2 bg-white text-black rounded-md text-sm font-semibold flex items-center justify-center border border-gray-300 hover:bg-gray-100 transition duration-300 ease-all cursor-pointer">
-            <a
-              href="http://github.com/psalmotee"
-              target="_blank"
-              className="flex items-center"
-            >
-              <span className="inline-block mr-4">
-                <FaGithub size="24" />
-              </span>
-              Github Repo
-            </a>
-          </div>
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => window.open("http://github.com/psalmotee", "_blank")}
+          >
+            <span className="mr-2">
+              <FaGithub size={24} />
+            </span>
+            Github Repo
+          </Button>
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default Landing;

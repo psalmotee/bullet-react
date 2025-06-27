@@ -39,6 +39,9 @@ a {
   font-weight: 500;
   text-decoration: none;
 }
+/* a:hover {
+  color: #535bf2;
+} */
 
 body {
   /* display: flex; */
@@ -48,4 +51,62 @@ body {
   color: #1a1a1a;
   justify-content: center;
   align-items: center;
+}
+
+
+.my-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45 0 0 / .3);
+  backdrop-filter: blur(10px);
+
+  &[data-entering] {
+    animation: mymodal-blur 300ms;
+  }
+
+  &[data-exiting] {
+    animation: mymodal-blur 300ms reverse ease-in;
+  }
+}
+
+.my-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  background: var(--overlay-background);
+  outline: none;
+  border-left: 1px solid var(--border-color);
+  box-shadow: -8px 0 20px rgba(0 0 0 / 0.1);
+
+  &[data-entering] {
+    animation: mymodal-slide 300ms;
+  }
+
+  &[data-exiting] {
+    animation: mymodal-slide 300ms reverse ease-in;
+  }
+}
+
+@keyframes mymodal-blur {
+  from {
+    background: rgba(45 0 0 / 0);
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    background: rgba(45 0 0 / .3);
+    backdrop-filter: blur(10px);
+  }
+}
+
+@keyframes mymodal-slide {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }

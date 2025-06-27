@@ -1,112 +1,123 @@
-import reactLogo from "@/assets/react.svg";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import GoogleSignIn from "../components/googleSignIn/GoogleSignIn";
-import GithubSignIn from "../components/githubSignIn/GithubSignIn";
+import reactLogo from "../assets/icons/reactLogo.svg";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import GoogleSignIn from "../components/auth/GoogleSignIn";
+import GithubSignIn from "../components/auth/GithubSignIn";
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        email,
-        password
+        formData.email,
+        formData.password
       );
       const user = userCredential.user;
+
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
-        toast.success("Login successful!!", {
-          position: "top-right",
-          autoClose: 2000,
-        });
+        toast.success("Login successful!");
         navigate("/dashboard");
       }
     } catch (error) {
-      toast.error("Error logging in!!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+      toast.error("Error logging in!");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center w-full min-h-screen sm:px-6 lg:px-8 py-16">
-        <div className=" w-full max-w-md ">
-          <div className="flex items-center justify-center">
-            <a href="/" className="flex items-center">
-              <img src={reactLogo} className="h-18 w-auto" alt="React logo" />
-            </a>
-          </div>
-          <h2 className="text-3xl font-extrabold text-black mt-6 text-center">
-            Log in to your account
-          </h2>
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center">
+          <a href="/" className="flex items-center">
+            <img src={reactLogo} className="h-24 w-auto" alt="React logo" />
+          </a>
         </div>
 
-          <div className="bg-white shadow-md rounded-lg mt-8 px-4 py-8 sm:px-10 w-full">
-            <form onSubmit={handleLogin} className="flex flex-col items-center">
-              <div className="mb-6 grid grid-cols-1 gap-1 w-full">
-                <label htmlFor="email" className="font-medium text-sm">
-                  <span className="text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">
-                    Email
-                  </span>
-                </label>
-                <input
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="you@example.com"
-                  className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full invalid:border-pink-500 invalid:text-pink-600 focus:border-sky-500 focus:outline focus:outline-sky-500 focus:invalid:border-pink-500 focus:invalid:outline-pink-500 disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:shadow-none dark:disabled:border-gray-700 dark:disabled:bg-gray-800/20"
-                />
-              </div>
-              <div className="mb-6 w-full grid grid-cols-1 gap-1">
-                <label htmlFor="password" className="font-medium text-sm">
-                  <span className="after:ml-0.5 after:text-red-500 after:content-['*']">
-                    Password
-                  </span>
-                </label>
-                <input
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="border border-gray-300 focus:outline-none text-black rounded-md px-3 py-1 flex h-9 w-full focus:border-sky-500 focus:outline focus:outline-sky-500"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-gray-900 text-white rounded-md w-full h-9 px-4 py-2 cursor-pointer mt-2 hover:bg-gray-800 transition duration-300 ease-in-out"
-              >
-                {loading && (
-                  <span className="loading loading-spinner loading-xs text-white/50"></span>
-                )}{" "}
-                Login
-              </button>
-            </form>
-            <div className="flex flex-col gap-2 mt-4">
-              <GoogleSignIn />
-              <GithubSignIn />
-            </div>
-            <p className="mt-4 text-sm text-end">
-              <span>Don't have an account?</span>{" "}
-              <a href="/register" className="text-blue-700 hover:text-blue-900">
-                Register
-              </a>
-            </p>
-          </div>
+        {/* Header */}
+        <h2 className="mt-3 text-center text-3xl font-extrabold text-gray-900">
+          Log in to your account
+        </h2>
       </div>
-    </>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="space-y-6">
+            <Input
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              placeholder="you@example.com"
+              required
+              autoComplete="email"
+              autoFocus
+              className="w-invalid:border-pink-500 invalid:text-pink-600 focus:border-sky-500 focus:outline focus:outline-sky-500 focus:invalid:border-pink-500 focus:invalid:outline-pink-500 disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:shadow-none dark:disabled:border-gray-700 dark:disabled:bg-gray-800/20"
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              required
+            />
+
+            <Button
+              type="submit"
+              loading={loading}
+              className="w-full justify-center"
+            >
+              Log in
+            </Button>
+          </form>
+
+          {/* Social Login */}
+          <div className="flex w-full flex-col space-y-3">
+            <div className="divider text-gray-500 text-sm">
+              Or continue with
+            </div>
+
+            <GoogleSignIn />
+            <GithubSignIn />
+          </div>
+
+          {/* Register Link */}
+          <p className="flex justify-end mt-2 text-center text-sm text-gray-600">
+            Don't have an account?{" "}
+            <a
+              href="/register"
+              className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+            >
+              <span className="ml-1">Register</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
 export default Login;
