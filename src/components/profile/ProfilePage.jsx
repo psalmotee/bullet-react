@@ -4,7 +4,7 @@ import { useModal } from "../../hooks/useModal";
 import Button from "../ui/Button";
 import Drawer from "../ui/Drawer";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
-import ProfileForm from "./ProfileForm";
+import ProfileForm from "./profileForm";
 import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const ProfilePage = () => {
