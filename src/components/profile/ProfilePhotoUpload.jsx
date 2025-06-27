@@ -8,7 +8,10 @@ import { toast } from "react-toastify";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 
-const ProfilePhotoUpload = ({ onPhotoChange = () => {}, initialPhoto = "" }) => {
+const ProfilePhotoUpload = ({
+  onPhotoChange = () => {},
+  initialPhoto = "",
+}) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -69,7 +72,7 @@ const ProfilePhotoUpload = ({ onPhotoChange = () => {}, initialPhoto = "" }) => 
       <div className="flex flex-col items-center gap-3">
         <div className="relative">
           <img
-            src={photoURL || "https://via.placeholder.com/150"}
+            src={photoURL}
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-gray-200"
           />
@@ -83,7 +86,9 @@ const ProfilePhotoUpload = ({ onPhotoChange = () => {}, initialPhoto = "" }) => 
             />
           </label>
         </div>
-        <p className="text-sm text-gray-600">Click camera icon to change photo</p>
+        <p className="text-sm text-gray-600">
+          Click camera icon to change photo
+        </p>
       </div>
 
       <Modal
@@ -104,7 +109,7 @@ const ProfilePhotoUpload = ({ onPhotoChange = () => {}, initialPhoto = "" }) => 
               onCropComplete={onCropComplete}
             />
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Zoom</label>
             <input
@@ -117,14 +122,12 @@ const ProfilePhotoUpload = ({ onPhotoChange = () => {}, initialPhoto = "" }) => 
               className="w-full"
             />
           </div>
-          
+
           <div className="flex justify-end gap-3">
-            <Button variant="secondary" onClick={() => setCropModalOpen(false)}>
-              Cancel
+            <Button size="sm"variant="secondary" onClick={() => setCropModalOpen(false)}>
+              Close
             </Button>
-            <Button onClick={handleCropConfirm}>
-              Save Photo
-            </Button>
+            <Button size="sm" onClick={handleCropConfirm}>Save Photo</Button>
           </div>
         </div>
       </Modal>
