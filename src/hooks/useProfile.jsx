@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '../firebase/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import Avatar from "../assets/images/avatar.png";
-
 import { toast } from 'react-toastify';
 
 export const useProfile = () => {
