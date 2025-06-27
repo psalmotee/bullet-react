@@ -1,9 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pen } from "lucide-react";
-import { db } from "../../firebase/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
+import { useViewDiscussion, useViewDiscussionActions } from "../../hooks/useViewDiscussion";
+import { useModal } from "../../hooks/useModal";
 import Button from "../ui/Button";
 import Drawer from "../ui/Drawer";
 import DiscussionForm from "../discussions/DiscussionForm";
@@ -12,59 +11,25 @@ import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const ViewDiscussion = () => {
   const { id } = useParams();
-  const [discussion, setDiscussion] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const fetchDiscussion = async () => {
-    try {
-      const docRef = doc(db, "discussions", id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setDiscussion({ id: docSnap.id, ...data });
-      } else {
-        toast.error("Discussion not found.");
-      }
-    } catch (error) {
-      toast.error("Failed to fetch discussion.");
-      console.error("Discussion fetch error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { discussion, loading, setDiscussion } = useViewDiscussion(id);
+  const { updateDiscussion, updating } = useViewDiscussionActions();
+  const { isOpen: isDrawerOpen, open: openDrawer, close: closeDrawer } = useModal();
 
   const handleUpdateDiscussion = async (formData) => {
-    setUpdating(true);
-    try {
-      await updateDoc(doc(db, "discussions", id), {
-        title: formData.title,
-        content: formData.content,
-      });
-      toast.success("Discussion updated successfully!");
+    const success = await updateDiscussion(id, formData);
+    if (success) {
       setDiscussion((prev) => ({
         ...prev,
         title: formData.title,
         content: formData.content,
       }));
-      setIsDrawerOpen(false);
-    } catch (error) {
-      toast.error("Failed to update discussion.");
-    } finally {
-      setUpdating(false);
+      closeDrawer();
     }
   };
 
   const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
+    closeDrawer();
   };
-
-  useEffect(() => {
-    if (id) {
-      fetchDiscussion();
-    }
-  }, [id]);
 
   if (loading) {
     return <LoadingScreen message="Loading discussion..." />;
@@ -107,7 +72,7 @@ const ViewDiscussion = () => {
 
         <div className="flex flex-col mt-6 space-y-16">
           <div className="flex justify-end ">
-            <Button size="sm" onClick={() => setIsDrawerOpen(true)}>
+            <Button size="sm" onClick={openDrawer}>
               <Pen size={16} />
               <span className="sr-only">Update Discussion</span>
               <span className="mx-2">Update Discussion</span>
