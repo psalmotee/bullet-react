@@ -27,37 +27,44 @@ const Discussions = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col w-full">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="px-4 sm:px-6 md:px-8">
         <h1 className="text-2xl font-semibold text-gray-900">Discussions</h1>
-        <Button onClick={openDrawer}>
-          <Plus size={16} />
-          Create Discussion
-        </Button>
       </div>
 
-      {/* Discussion List */}
-      <DiscussionList
-        discussions={discussions}
-        loading={loading}
-        onDelete={handleDeleteDiscussion}
-      />
+      <div className="px-4 sm:px-6 md:px-8 py-6">
+        {/* Create Discussion Button */}
+        <div className="flex justify-end">
+          <Button size="sm" onClick={openDrawer}>
+            <Plus size={16} />
+            <span className="mx-2">Create Discussion</span>
+          </Button>
+        </div>
 
-      {/* Create Discussion Drawer */}
-      <Drawer
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-        title="Create Discussion"
-        size="lg"
-      >
-        <DiscussionForm
-          onSubmit={handleCreateDiscussion}
-          onCancel={closeDrawer}
-          loading={createLoading}
-          submitText="Create Discussion"
-        />
-      </Drawer>
+        {/* Discussion List */}
+        <div className="mt-2">
+          <DiscussionList
+            discussions={discussions}
+            loading={loading}
+            onDelete={handleDeleteDiscussion}
+          />
+
+          {/* Create Discussion Drawer */}
+          <Drawer
+            isOpen={isDrawerOpen}
+            onClose={closeDrawer}
+            title="Create Discussion"
+          >
+            <DiscussionForm
+              onSubmit={handleCreateDiscussion}
+              onCancel={closeDrawer}
+              loading={createLoading}
+              submitText="Submit"
+            />
+          </Drawer>
+        </div>
+      </div>
     </div>
   );
 };
