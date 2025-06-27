@@ -49,7 +49,7 @@ const Topbar = ({ onMenuClick }) => {
       {/* Profile dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
-          className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <UserRound size={24} />
