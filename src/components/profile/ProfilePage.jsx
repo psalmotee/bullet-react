@@ -3,11 +3,9 @@ import { useProfile, useProfileActions } from "../../hooks/useProfile";
 import { useModal } from "../../hooks/useModal";
 import Button from "../ui/Button";
 import Drawer from "../ui/Drawer";
-import Input from "../ui/Input";
-import Textarea from "../ui/Textarea";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
-import { LoadingScreen } from "../ui/LoadingSpinner";
 import ProfileForm from "./ProfileForm";
+import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const ProfilePage = () => {
   const {
