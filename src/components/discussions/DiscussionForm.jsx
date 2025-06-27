@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "../ui/Input";
 import Textarea from "../ui/Textarea";
 import Button from "../ui/Button";
+import { toast } from "react-toastify";
 
 const DiscussionForm = ({
   initialData = {},
@@ -15,8 +16,16 @@ const DiscussionForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
-    onSubmit({ title, content });
+    if (!title.trim() || !content.trim()) return;
+    const newData = { title, content };
+    const hasChanged = Object.keys(newData).some(
+      (key) => newData[key] !== initialData[key]
+    );
+    if (!hasChanged) {
+      toast.info("No changes made.");
+      return;
+    }
+    onSubmit(newData);
   };
 
   return (

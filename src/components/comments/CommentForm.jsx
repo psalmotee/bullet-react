@@ -33,11 +33,9 @@ const CommentForm = ({
 
       <div className="flex justify-end gap-3">
         <Button size="sm" variant="secondary" onClick={onCancel}>
-          <span className="sr-only">Close</span>
           <span className="mx-2">Close</span>
         </Button>
         <Button size="sm" type="submit" loading={loading}>
-          <span className="sr-only">Submit Comment</span>
           <span className="mx-2">{submitText}</span>
         </Button>
       </div>

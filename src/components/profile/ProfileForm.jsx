@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Input from '../ui/Input';
 import Textarea from '../ui/Textarea';
 import Button from '../ui/Button';
+import { toast } from 'react-toastify';
 
 const ProfileForm = ({ 
   initialData = {}, 
@@ -17,9 +18,22 @@ const ProfileForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!firstName.trim() || !lastName.trim() || !email.trim()) return;
-    onSubmit({ firstName, lastName, email, bio });
+
+    const newData = { firstName, lastName, email, bio };
+    const hasChanged = Object.keys(newData).some(
+      (key) => newData[key] !== initialData[key]
+    );
+
+    if (!hasChanged) {
+      toast.info("No changes made.");
+      return;
+    }
+
+    onSubmit(newData);
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col justify-between h-full">

@@ -145,7 +145,7 @@ const ViewDiscussion = () => {
             onSubmit={handleUpdateDiscussion}
             onCancel={handleCloseDrawer}
             loading={updating}
-            submitText="Update Discussion"
+            submitText="Submit"
           />
         </Drawer>
       </div>

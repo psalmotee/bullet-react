@@ -142,7 +142,7 @@ const ProfilePage = () => {
           onSubmit={handleUpdateProfile}
           onCancel={handleCloseDrawer}
           loading={updating}
-          submitText="Update Profile"
+          submitText="Submit"
         />
       </Drawer>
     </>
