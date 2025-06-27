@@ -29,13 +29,13 @@ const Comments = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col w-full py-6 sm:py-0">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex justify-between  mt-8 mb-4">
         <h3 className="text-xl font-semibold text-gray-900">Comments</h3>
-        <Button onClick={openDrawer}>
+        <Button size="sm" onClick={openDrawer}>
           <Plus size={16} />
-          Add Comment
+          <span className="mx-2">Create Comment</span>
         </Button>
       </div>
 
@@ -50,13 +50,13 @@ const Comments = () => {
       <Drawer
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
-        title="Add Comment"
-        size="md"
+        title="Create Comment"
       >
         <CommentForm
           onSubmit={handleCreateComment}
           onCancel={closeDrawer}
           loading={createLoading}
+          submitText="Submit"
         />
       </Drawer>
     </div>
