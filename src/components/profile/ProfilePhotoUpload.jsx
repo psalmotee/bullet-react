@@ -7,6 +7,7 @@ import { auth, db } from "../../firebase/firebase";
 import { toast } from "react-toastify";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
+import Avatar from "../../assets/images/avatar.png";
 
 const ProfilePhotoUpload = ({
   onPhotoChange = () => {},
@@ -17,7 +18,7 @@ const ProfilePhotoUpload = ({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [photoURL, setPhotoURL] = useState("");
+  const [photoURL, setPhotoURL] = useState(Avatar);
 
   useEffect(() => {
     if (initialPhoto) {
