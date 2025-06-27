@@ -24,12 +24,16 @@ const ProfilePage = () => {
     close: closeDrawer,
   } = useModal();
 
-  const handleUpdateProfile = async () => {
-    const success = await updateProfile(formData);
+  const handleUpdateProfile = async (profileData) => {
+    const success = await updateProfile(profileData);
     if (success) {
-      setUserDetails((prev) => ({ ...prev, ...formData }));
+      setUserDetails((prev) => ({ ...prev, ...profileData }));
       closeDrawer();
     }
+  };
+
+  const handleCloseDrawer = () => {
+    closeDrawer();
   };
 
   if (loading) {
@@ -130,13 +134,13 @@ const ProfilePage = () => {
       {/* Edit Profile Drawer */}
       <Drawer
         isOpen={isDrawerOpen}
-        onClose={closeDrawer}
+        onClose={handleCloseDrawer}
         title="Update Profile"
       >
         <ProfileForm
           initialData={userDetails}
           onSubmit={handleUpdateProfile}
-          onCancel={closeDrawer}
+          onCancel={handleCloseDrawer}
           loading={updating}
           submitText="Update Profile"
         />

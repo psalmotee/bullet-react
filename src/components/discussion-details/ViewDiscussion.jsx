@@ -56,6 +56,10 @@ const ViewDiscussion = () => {
     }
   };
 
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
   useEffect(() => {
     if (id) {
       fetchDiscussion();
@@ -130,7 +134,7 @@ const ViewDiscussion = () => {
         {/* Update Discussion Drawer */}
         <Drawer
           isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
+          onClose={handleCloseDrawer}
           title="Update Discussion"
         >
           <DiscussionForm
@@ -139,9 +143,9 @@ const ViewDiscussion = () => {
               content: discussion.content,
             }}
             onSubmit={handleUpdateDiscussion}
-            onCancel={() => setIsDrawerOpen(false)}
+            onCancel={handleCloseDrawer}
             loading={updating}
-            submitText="Submit"
+            submitText="Update Discussion"
           />
         </Drawer>
       </div>
