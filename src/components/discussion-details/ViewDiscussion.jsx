@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Edit } from "lucide-react";
+import { Pen } from "lucide-react";
 import { db } from "../../firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -85,60 +85,66 @@ const ViewDiscussion = () => {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col w-full space-y-6">
       {/* Discussion Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-          <div className="flex-1">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-              {discussion.title}
-            </h1>
-            <p className="text-sm text-gray-600">
-              {formattedDate} by{" "}
-              <span className="font-medium">
-                {discussion.authorName || "Unknown"}
-              </span>
-            </p>
+      <div className="px-4 sm:px-6 md:px-8">
+        <h1 className="text-2xl font-semibold text-gray-900">
+          {discussion.title}
+        </h1>
+      </div>
+
+      <div className="px-4 sm:px-6 md:px-8">
+        <p className="text-xs font-bold text-gray-600">
+          {formattedDate} by{" "}
+          <span className="text-sm font-medium">
+            {discussion.authorName || "Unknown"}
+          </span>
+        </p>
+
+        <div className="flex flex-col mt-6 space-y-16">
+          <div className="flex justify-end ">
+            <Button size="sm" onClick={() => setIsDrawerOpen(true)}>
+              <Pen size={16} />
+              <span className="sr-only">Update Discussion</span>
+              <span className="mx-2">Update Discussion</span>
+            </Button>
           </div>
-          <Button onClick={() => setIsDrawerOpen(true)}>
-            <Edit size={16} />
-            Edit Discussion
-          </Button>
+
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 px-4 sm:px-6 py-5">
+            {/* Discussion Content */}
+            {discussion.content && (
+              <div className="prose max-w-none p-2">
+                <p className="text-gray-800 whitespace-pre-wrap">
+                  {discussion.content}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Discussion Content */}
-        {discussion.content && (
-          <div className="prose max-w-none">
-            <p className="text-gray-800 whitespace-pre-wrap">
-              {discussion.content}
-            </p>
-          </div>
-        )}
-      </div>
+        {/* Comments Section */}
+        <div className="">
+          <Comments />
+        </div>
 
-      {/* Comments Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <Comments />
+        {/* Update Discussion Drawer */}
+        <Drawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          title="Update Discussion"
+        >
+          <DiscussionForm
+            initialData={{
+              title: discussion.title,
+              content: discussion.content,
+            }}
+            onSubmit={handleUpdateDiscussion}
+            onCancel={() => setIsDrawerOpen(false)}
+            loading={updating}
+            submitText="Submit"
+          />
+        </Drawer>
       </div>
-
-      {/* Update Discussion Drawer */}
-      <Drawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        title="Edit Discussion"
-        size="lg"
-      >
-        <DiscussionForm
-          initialData={{
-            title: discussion.title,
-            content: discussion.content,
-          }}
-          onSubmit={handleUpdateDiscussion}
-          onCancel={() => setIsDrawerOpen(false)}
-          loading={updating}
-          submitText="Update Discussion"
-        />
-      </Drawer>
     </div>
   );
 };
