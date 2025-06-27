@@ -135,7 +135,7 @@ const ProfilePage = () => {
       >
         <ProfileForm
           initialData={userDetails}
-          onSubmit={updateFormData}
+          onSubmit={handleUpdateProfile}
           onCancel={closeDrawer}
           loading={updating}
           submitText="Update Profile"
