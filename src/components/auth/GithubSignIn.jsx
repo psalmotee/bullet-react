@@ -3,7 +3,7 @@ import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Github } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import Button from "../ui/Button";
 
 const GithubSignIn = () => {
@@ -33,18 +33,12 @@ const GithubSignIn = () => {
         { merge: true }
       );
 
-      toast.success("Signed up with GitHub!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+      toast.success("Signed up with GitHub!");
 
       navigate("/dashboard");
     } catch (error) {
       console.error("GitHub Sign In Error:", error);
-      toast.error(`GitHub signup failed! ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error(`GitHub signup failed!: ${error.message}`);
     }
   };
 
@@ -54,7 +48,9 @@ const GithubSignIn = () => {
       onClick={handleGithubSignup}
       className="w-full justify-center"
     >
-      <Github size={20} />
+      <span className="mr-2">
+        <FaGithub size={24} />
+      </span>
       Sign up with GitHub
     </Button>
   );
