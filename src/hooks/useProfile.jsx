@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 export const useProfile = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [photo, setPhoto] = useState("");
+  const [photo, setPhoto] = useState(Avatar); // Initialize with Avatar instead of empty string
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,14 +38,17 @@ export const useProfile = () => {
             setPhoto(customPhoto || googlePhoto || localPhoto || Avatar);
           } else {
             toast.error("User details not found in database.");
+            setPhoto(Avatar); // Explicitly set to Avatar when user details not found
           }
         } catch (error) {
           toast.error("Error fetching user details.");
           console.error("Error fetching user details:", error);
+          setPhoto(Avatar); // Explicitly set to Avatar on error
         }
       } else {
         toast.info("No user signed in.");
         setUserDetails(null);
+        setPhoto(Avatar); // Explicitly set to Avatar when no user signed in
       }
       setLoading(false);
     });
