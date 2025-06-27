@@ -4,11 +4,7 @@ import { useModal } from "../../hooks/useModal";
 import Button from "../ui/Button";
 import Drawer from "../ui/Drawer";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
-<<<<<<< HEAD
-import ProfileForm from "./ProfileForm";
-=======
 import ProfileForm from "./profileForm";
->>>>>>> 762c7a4a8ba7f97693c18fd625b57050952ee26d
 import { LoadingScreen } from "../ui/LoadingSpinner";
 
 const ProfilePage = () => {
@@ -22,7 +18,11 @@ const ProfilePage = () => {
     setUserDetails,
   } = useProfile();
   const { updateProfile, updating } = useProfileActions();
-  const { isOpen: isDrawerOpen, open: openDrawer, close: closeDrawer } = useModal();
+  const {
+    isOpen: isDrawerOpen,
+    open: openDrawer,
+    close: closeDrawer,
+  } = useModal();
 
   const handleUpdateProfile = async () => {
     const success = await updateProfile(formData);
@@ -132,7 +132,6 @@ const ProfilePage = () => {
         isOpen={isDrawerOpen}
         onClose={closeDrawer}
         title="Update Profile"
-        
       >
         <ProfileForm
           initialData={userDetails}
