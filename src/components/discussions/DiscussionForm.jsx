@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import Input from '../ui/Input';
-import Textarea from '../ui/Textarea';
-import Button from '../ui/Button';
+import { useState } from "react";
+import Input from "../ui/Input";
+import Textarea from "../ui/Textarea";
+import Button from "../ui/Button";
 
-const DiscussionForm = ({ 
-  initialData = {}, 
-  onSubmit, 
-  onCancel, 
+const DiscussionForm = ({
+  initialData = {},
+  onSubmit,
+  onCancel,
   loading = false,
-  submitText = 'Submit'
+  submitText = "Submit",
 }) => {
-  const [title, setTitle] = useState(initialData.title || '');
-  const [content, setContent] = useState(initialData.content || '');
+  const [title, setTitle] = useState(initialData.title || "");
+  const [content, setContent] = useState(initialData.content || "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,29 +20,34 @@ const DiscussionForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <Input
-        label="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-        placeholder="Enter discussion title"
-      />
-      
-      <Textarea
-        label="Content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Enter discussion content"
-        rows={6}
-      />
-      
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 flex flex-col justify-between h-full"
+    >
+      <div className="flex flex-col gap-4">
+        <Input
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          placeholder="Enter discussion title"
+        />
+
+        <Textarea
+          label="Body"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Enter discussion content"
+          rows={6}
+        />
+      </div>
+
       <div className="flex justify-end gap-3">
-        <Button variant="secondary" onClick={onCancel}>
-          Cancel
+        <Button variant="secondary" size="sm" onClick={onCancel}>
+          <span className="mx-2">Close</span>
         </Button>
-        <Button type="submit" loading={loading}>
-          {submitText}
+        <Button type="submit" size="sm" loading={loading}>
+          <span className="mx-2">{submitText}</span>
         </Button>
       </div>
     </form>
