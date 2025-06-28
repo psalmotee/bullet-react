@@ -35,7 +35,9 @@ const Landing = () => {
           <Button
             variant="secondary"
             size="md"
-            onClick={() => window.open("http://github.com/psalmotee", "_blank")}
+            onClick={() =>
+              window.open("https://github.com/psalmotee/bullet-react", "_blank")
+            }
           >
             <span className="mr-2">
               <FaGithub size={24} />
