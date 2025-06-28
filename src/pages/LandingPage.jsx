@@ -24,9 +24,9 @@ const Landing = () => {
         <p>Showcasing Best Practices For Building React Applications</p>
 
         {/* Action Buttons */}
-        <div className="flex space-x-1 justify-center mt-8">
+        <div className="flex space-x-3 justify-center mt-8">
           <Button size="md" onClick={() => navigate("/login")}>
-            <span className="mr-">
+            <span>
               <BiHome size={24} />
             </span>
             <span className="mx-2">Get Started</span>
@@ -39,7 +39,7 @@ const Landing = () => {
               window.open("https://github.com/psalmotee/bullet-react", "_blank")
             }
           >
-            <span className="">
+            <span>
               <FaGithub size={24} />
             </span>
             <span className="mx-2">Github Repo</span>
