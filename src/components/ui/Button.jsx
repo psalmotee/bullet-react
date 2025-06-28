@@ -14,7 +14,7 @@ const Button = forwardRef(
     ref
   ) => {
     const baseClasses =
-      "inline-flex items-center justify-center gap-1 font-medium rounded-md transition-all duration-300 ease-in-out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+      "inline-flex items-center justify-center gap-1 font-medium rounded-md whitespace-nowrap transition-all duration-300 ease-in-out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants = {
       primary: "bg-gray-900 text-white hover:bg-gray-700",
