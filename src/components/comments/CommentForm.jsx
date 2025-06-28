@@ -9,23 +9,34 @@ const CommentForm = ({
   submitText = "Submit",
 }) => {
   const [body, setBody] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!body.trim()) return;
-    onSubmit({ body });
+
+    if (!body.trim()) {
+      setError("Comment is required.");
+      return;
+    }
+
+    setError("");
+    onSubmit({ body: body.trim() });
     setBody("");
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className=" flex flex-col justify-between h-full"
+      className="flex flex-col justify-between h-full space-y-4"
     >
       <Textarea
         label="Body"
         value={body}
-        onChange={(e) => setBody(e.target.value)}
+        onChange={(e) => {
+          setBody(e.target.value);
+          setError("");
+        }}
+        error={error}
         placeholder="Write your comment..."
         required
         rows={4}
