@@ -8,7 +8,7 @@ const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-cente justify-center bg-white mx-auto px-4 py-6 sm:p-6">
+    <div className="min-h-screen flex items-center justify-center bg-white mx-auto px-4 py-6 sm:p-6">
       <div className="text-center max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         {/* Title */}
         <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
