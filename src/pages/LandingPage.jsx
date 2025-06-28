@@ -24,7 +24,7 @@ const Landing = () => {
         <p>Showcasing Best Practices For Building React Applications</p>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+        <div className="flex gap-4 justify-center items-center mt-8">
           <Button size="md" onClick={() => navigate("/login")}>
             <span className="mr-2">
               <BiHome size={24} />
