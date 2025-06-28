@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { auth, db } from '../firebase/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
+import { auth, db } from "../firebase/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -11,17 +11,28 @@ export const useAuth = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       setUser(currentUser);
-      
+
       if (currentUser) {
         try {
           const docRef = doc(db, "Users", currentUser.uid);
           const docSnap = await getDoc(docRef);
-          
+
+          // Fallback to GitHub or Google auth fields
+          const fullName = currentUser.displayName || "";
+          const [firstName, ...lastParts] = fullName.split(" ");
+          const fallbackData = {
+            firstName: firstName || "",
+            lastName: lastParts.join(" ") || "",
+            email: currentUser.email || "",
+            photoURL: currentUser.photoURL || "", // GitHub/Google profile image
+            role: "User", // Default if not in DB
+          };
+
           if (docSnap.exists()) {
-            setUserDetails(docSnap.data());
+            const dbData = docSnap.data();
+            setUserDetails({ ...fallbackData, ...dbData }); // DB overrides fallback
           } else {
-            toast.error("User details not found in database.");
-            setUserDetails(null);
+            setUserDetails(fallbackData);
           }
         } catch (error) {
           console.error("Error fetching user details:", error);
@@ -31,7 +42,7 @@ export const useAuth = () => {
       } else {
         setUserDetails(null);
       }
-      
+
       setLoading(false);
     });
 

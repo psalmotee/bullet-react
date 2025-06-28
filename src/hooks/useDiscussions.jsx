@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { db, auth } from '../firebase/firebase';
+import { useState, useEffect } from "react";
+import { db, auth } from "../firebase/firebase";
 import {
   collection,
   addDoc,
@@ -9,20 +9,51 @@ import {
   doc,
   orderBy,
   query,
-} from 'firebase/firestore';
-import { toast } from 'react-toastify';
+  where,
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { toast } from "react-toastify";
 
 export const useDiscussions = () => {
   const [discussions, setDiscussions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchDiscussions = async () => {
+  const fetchDiscussions = async (currentUser) => {
     try {
       setLoading(true);
-      const q = query(
-        collection(db, "discussions"),
-        orderBy("createdAt", "desc")
-      );
+      if (!currentUser) {
+        toast.error("Not authenticated.");
+        setDiscussions([]);
+        return;
+      }
+
+      const userSnap = await getDoc(doc(db, "Users", currentUser.uid));
+      const userData = userSnap.data();
+
+      if (!userData) {
+        toast.error("User data not found.");
+        setDiscussions([]);
+        return;
+      }
+
+      let q;
+
+      if (userData.role === "Admin") {
+        // 🔐 Admin sees all team discussions
+        q = query(
+          collection(db, "discussions"),
+          where("teamId", "==", userData.teamId),
+          orderBy("createdAt", "desc")
+        );
+      } else {
+        // 🙋‍♂️ Member sees only their own
+        q = query(
+          collection(db, "discussions"),
+          where("createdBy", "==", currentUser.uid),
+          orderBy("createdAt", "desc")
+        );
+      }
+
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -36,12 +67,26 @@ export const useDiscussions = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
-    fetchDiscussions();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchDiscussions(user);
+      } else {
+        setDiscussions([]);
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  return { discussions, loading, refetch: fetchDiscussions };
+  return {
+    discussions,
+    loading,
+    refetch: () => fetchDiscussions(auth.currentUser),
+  };
 };
 
 export const useDiscussionActions = () => {
@@ -71,6 +116,7 @@ export const useDiscussionActions = () => {
       const newDiscussion = {
         title: formData.title,
         content: formData.content,
+        teamId: userData.teamId,
         createdBy: user.uid,
         authorName: fullName,
         createdAt: new Date(),

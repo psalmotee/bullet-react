@@ -14,32 +14,60 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (!validate()) return;
 
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
-      const user = userCredential.user;
 
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user));
+      if (userCredential?.user) {
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
         toast.success("Login successful!");
         navigate("/dashboard");
       }
     } catch (error) {
-      toast.error("Error logging in!");
+      if (error.code === "auth/user-not-found") {
+        toast.error("No user found with this email.");
+      } else if (error.code === "auth/wrong-password") {
+        toast.error("Incorrect password.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -48,14 +76,11 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Logo */}
         <div className="flex justify-center">
           <a href="/" className="flex items-center">
             <img src={reactLogo} className="h-24 w-auto" alt="React logo" />
           </a>
         </div>
-
-        {/* Header */}
         <h2 className="mt-3 text-center text-3xl font-extrabold text-gray-900">
           Log in to your account
         </h2>
@@ -63,18 +88,17 @@ const Login = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
-          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
             <Input
               label="Email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
+              error={errors.email}
               placeholder="you@example.com"
-              required
               autoComplete="email"
+              required
               autoFocus
-              className="w-invalid:border-pink-500 invalid:text-pink-600 focus:border-sky-500 focus:outline focus:outline-sky-500 focus:invalid:border-pink-500 focus:invalid:outline-pink-500 disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:shadow-none dark:disabled:border-gray-700 dark:disabled:bg-gray-800/20"
             />
 
             <Input
@@ -82,7 +106,10 @@ const Login = () => {
               type="password"
               value={formData.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
+              error={errors.password}
               required
+              minLength={6}
+              placeholder="Enter your password"
             />
 
             <Button
@@ -94,24 +121,21 @@ const Login = () => {
             </Button>
           </form>
 
-          {/* Social Login */}
-          <div className="flex w-full flex-col space-y-3">
+          <div className="flex w-full flex-col space-y-3 mt-6">
             <div className="divider text-gray-500 text-sm">
               Or continue with
             </div>
-
             <GoogleSignIn />
             <GithubSignIn />
           </div>
 
-          {/* Register Link */}
-          <p className="flex justify-end mt-2 text-center text-sm text-gray-600">
+          <p className="flex justify-end mt-4 text-center text-sm text-gray-600">
             Don't have an account?{" "}
             <a
               href="/register"
-              className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+              className="ml-1 font-medium text-blue-600 hover:text-blue-500"
             >
-              <span className="ml-1">Register</span>
+              Register
             </a>
           </p>
         </div>

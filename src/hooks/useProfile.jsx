@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { auth, db } from '../firebase/firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useState, useEffect } from "react";
+import { auth, db } from "../firebase/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Avatar from "../assets/images/avatar.png";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export const useProfile = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [photo, setPhoto] = useState(Avatar); // Initialize with Avatar instead of empty string
+  const [photo, setPhoto] = useState(Avatar);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -21,42 +21,66 @@ export const useProfile = () => {
         try {
           const docRef = doc(db, "Users", user.uid);
           const docSnap = await getDoc(docRef);
+
+          // Split display name from GitHub or Google into first/last
+          const fullName = user.displayName || "";
+          const [firstName, ...lastParts] = fullName.split(" ");
+          const fallbackData = {
+            firstName: firstName || "",
+            lastName: lastParts.join(" ") || "",
+            email: user.email || "",
+            photoURL: user.photoURL || "",
+            bio: "",
+            role: "User", // fallback role
+          };
+
           if (docSnap.exists()) {
-            const data = docSnap.data();
-            setUserDetails(data);
+            const dbData = docSnap.data();
+            const merged = { ...fallbackData, ...dbData }; // prefer Firestore if present
+
+            setUserDetails(merged);
             setFormData({
-              firstName: data.firstName || "",
-              lastName: data.lastName || "",
-              email: data.email || "",
-              bio: data.bio || "",
+              firstName: merged.firstName || "",
+              lastName: merged.lastName || "",
+              email: merged.email || "",
+              bio: merged.bio || "",
             });
-            
-            const customPhoto = data.photoURL;
-            const googlePhoto = user.photoURL;
+
+            const customPhoto = dbData.photoURL;
+            const providerPhoto = user.photoURL;
             const localPhoto = localStorage.getItem("profilePhoto");
-            setPhoto(customPhoto || googlePhoto || localPhoto || Avatar);
+            setPhoto(customPhoto || providerPhoto || localPhoto || Avatar);
           } else {
-            toast.error("User details not found in database.");
-            setPhoto(Avatar); // Explicitly set to Avatar when user details not found
+            toast.info("Using authentication provider info.");
+            setUserDetails(fallbackData);
+            setFormData({
+              firstName: fallbackData.firstName,
+              lastName: fallbackData.lastName,
+              email: fallbackData.email,
+              bio: fallbackData.bio,
+            });
+
+            const localPhoto = localStorage.getItem("profilePhoto");
+            setPhoto(user.photoURL || localPhoto || Avatar);
           }
         } catch (error) {
           toast.error("Error fetching user details.");
           console.error("Error fetching user details:", error);
-          setPhoto(Avatar); // Explicitly set to Avatar on error
+          setPhoto(Avatar);
         }
       } else {
         toast.info("No user signed in.");
         setUserDetails(null);
-        setPhoto(Avatar); // Explicitly set to Avatar when no user signed in
+        setPhoto(Avatar);
       }
       setLoading(false);
     });
-    
+
     return () => unsubscribe();
   }, []);
 
   const updateFormData = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return {
@@ -69,7 +93,6 @@ export const useProfile = () => {
     setUserDetails,
   };
 };
-
 export const useProfileActions = () => {
   const [updating, setUpdating] = useState(false);
 
