@@ -108,7 +108,6 @@ const Login = () => {
               onChange={(e) => handleInputChange("password", e.target.value)}
               error={errors.password}
               required
-              minLength={6}
               placeholder="Enter your password"
             />
 
